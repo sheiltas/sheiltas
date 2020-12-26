@@ -1,6 +1,6 @@
 
-# Created by https://www.toptal.com/developers/gitignore/api/webstorm,node,macos
-# Edit at https://www.toptal.com/developers/gitignore?templates=webstorm,node,macos
+# Created by https://www.toptal.com/developers/gitignore/api/node,macos,webstorm
+# Edit at https://www.toptal.com/developers/gitignore\?templates\=node,macos,webstorm
 
 ### macOS ###
 # General
@@ -8,7 +8,7 @@
 .AppleDouble
 .LSOverride
 
-# Icon must end with two \r
+# Icon must end with two 
 Icon
 
 
@@ -96,7 +96,7 @@ typings/
 # Optional REPL history
 .node_repl_history
 
-# Output of 'npm pack'
+# Output of npm pack
 *.tgz
 
 # Yarn Integrity file
@@ -121,7 +121,7 @@ dist
 # Gatsby files
 .cache/
 # Comment in the public line in if your project uses Gatsby and not Next.js
-# https://nextjs.org/blog/next-9-1#public-directory-support
+# https://nextjs.org/blog/next-9-1\#public-directory-support
 # public
 
 # vuepress build output
@@ -216,7 +216,7 @@ fabric.properties
 .idea/caches/build_file_checksums.ser
 
 ### WebStorm Patch ###
-# Comment Reason: https://github.com/joeblau/gitignore.io/issues/186#issuecomment-215987721
+# Comment Reason: https://github.com/joeblau/gitignore.io/issues/186\#issuecomment-215987721
 
 # *.iml
 # modules.xml
@@ -245,4 +245,4 @@ fabric.properties
 # https://plugins.jetbrains.com/plugin/12206-codestream
 .idea/codestream.xml
 
-# End of https://www.toptal.com/developers/gitignore/api/webstorm,node,macos
+# End of https://www.toptal.com/developers/gitignore/api/node,macos,webstorm
