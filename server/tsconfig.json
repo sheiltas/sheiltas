@@ -5,7 +5,9 @@
         "outDir": "dist",
         "sourceMap": true,
         "allowSyntheticDefaultImports": true,
-        "noImplicitAny": true
+        "noImplicitAny": true,
+        "resolveJsonModule": true,
+        "types": ["node"]
     },
     "include": ["src/**/*.ts"],
     "exclude": ["node_modules"]

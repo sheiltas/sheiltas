@@ -1,0 +1,12 @@
+{
+  "he": {
+    "login": "התחברות",
+    "username": "שם משתמש",
+    "password": "סיסמה"
+  },
+  "en": {
+    "login": "Login",
+    "username": "Username",
+    "password": "Password"
+  }
+}

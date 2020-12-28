@@ -1,17 +1,18 @@
-import React, { memo } from "react";
-import { Switch, Route, BrowserRouter } from "react-router-dom";
+import React, { memo } from 'react';
+import { Switch, Route, BrowserRouter } from 'react-router-dom';
+import LoginPage from './pages/Login';
+import EditorPage from './pages/Editor';
 
 const Router = () => {
   return (
     <BrowserRouter>
       <Switch>
-        <Route path="/login">
-          {/*<Login />*/}
-          login
+        {/*  Should be /login*/}
+        <Route path="/" exact>
+          <LoginPage />
         </Route>
         <Route path="/editor">
-          editor
-          {/*<Editor />*/}
+          <EditorPage />
         </Route>
       </Switch>
     </BrowserRouter>

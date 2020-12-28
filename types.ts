@@ -1,3 +1,6 @@
+// @ts-ignore
+import ReactNode from "react";
+
 // Sheilta categories
 export enum categories {
   aroundTheYear = "במעגל השנה",
@@ -212,3 +215,9 @@ export type subcategories = aroundTheYearSubcategories &
   charitySubcategories &
   animalsSubcategories &
   educationAndCounselingAndNamesSubcategories;
+
+export type locales = "he" | "en";
+
+export interface ChildrenProps {
+  children: ReactNode;
+}

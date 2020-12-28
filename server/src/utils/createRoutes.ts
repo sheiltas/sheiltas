@@ -2,7 +2,7 @@ import * as express from 'express';
 import { Document, Error, Model } from 'mongoose';
 import { Request, Response } from 'express';
 
-type apiFunction = (req: Request, res: Response) => void;
+type apiFunction = (req: Request, res: Response) => Promise<void>;
 
 const handleError = (res: Response, error: Error, { status = 500 }) => res.status(status).send(error);
 const handleSuccess = function <T>(
@@ -16,10 +16,17 @@ const handleSuccess = function <T>(
     res.status(status).send(response);
 };
 
-const tryCatchHandler = (tryFunc: apiFunction, req: Request, res: Response, options = { errStatus: 500 }) => {
+const tryCatchHandler = async (
+    tryFunc: apiFunction,
+    req: Request,
+    res: Response,
+    options = { errStatus: 500 }
+) => {
     try {
-        tryFunc(req, res);
+        await tryFunc(req, res);
     } catch (e) {
+        console.log(e);
+
         const { errStatus } = options;
         handleError(res, e, { status: errStatus });
     }
@@ -33,23 +40,24 @@ const createRoutes = function <T extends Document>(routeName: string, model: Mod
         handleSuccess<T>(res, await model.find(req.body));
 
     router.get(baseUrl, async (req, res) => {
-        tryCatchHandler(getFunction, req, res);
+        await tryCatchHandler(getFunction, req, res);
     });
 
-    const postFunction = async (req: Request, res: Response) =>
-        handleSuccess<T>(res, await Model.create(req.body), { status: 201 });
+    const postFunction = async (req: Request, res: Response) => {
+        handleSuccess<T>(res, await model.create(req.body), { status: 201 });
+    };
 
-    router.post(baseUrl, async (req, res) => tryCatchHandler(postFunction, req, res));
+    router.post(baseUrl, async (req, res) => await tryCatchHandler(postFunction, req, res));
 
     const deleteFunc = async (req: Request, res: Response) =>
-        handleSuccess<T>(res, await Model.findOneAndDelete(req.body));
+        handleSuccess<T>(res, await model.findOneAndDelete(req.body));
 
-    router.delete(baseUrl, async (req, res) => tryCatchHandler(deleteFunc, req, res));
+    router.delete(baseUrl, async (req, res) => await tryCatchHandler(deleteFunc, req, res));
 
     const putFunction = async (req: Request, res: Response) =>
-        handleSuccess<T>(res, await Model.findOneAndUpdate(req.body));
+        handleSuccess<T>(res, await model.findOneAndUpdate(req.body));
 
-    router.put(baseUrl, async (req, res) => tryCatchHandler(putFunction, req, res, { errStatus: 304 }));
+    router.put(baseUrl, async (req, res) => await tryCatchHandler(putFunction, req, res, { errStatus: 304 }));
 
     return router;
 };
