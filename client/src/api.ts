@@ -4,7 +4,6 @@ import { loginObj } from '../../types';
 const axiosInstance = axios.create({
   // baseURL: `${process.env.BASE_REQUEST_URL}/api`
   baseURL: `http://localhost:4000/api`
-  // baseURL: `localhost:4000/api`
 });
 
 const login = async (loginData: loginObj) => {

@@ -17,7 +17,12 @@ const createClasses = makeStyles((theme) => ({
   },
   formContainer: {
     minWidth: '300px',
-    minHeight: '350px'
+    minHeight: '200px'
+  },
+  button: {
+    borderRadius: '30px',
+    width: '100%',
+    top: '50px'
   }
 }));
 
@@ -83,7 +88,13 @@ const LoginPage = () => {
                       label={locale.password}
                       type="password"
                     />
-                    <Button type="submit">{locale.login}</Button>
+                    <Grid container justify="center">
+                      <Grid item xs={7}>
+                        <Button type="submit" className={classes.button}>
+                          {locale.login}
+                        </Button>
+                      </Grid>
+                    </Grid>
                   </Grid>
                 </Form>
               );
