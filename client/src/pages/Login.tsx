@@ -8,7 +8,7 @@ import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-
+import { login } from '../api';
 import { useClientProvider } from '../providers/ClientProvider';
 
 const createClasses = makeStyles((theme) => ({
@@ -28,13 +28,13 @@ const LoginPage = () => {
   const { locale } = useClientProvider();
   const onSubmit = useCallback(
     async (values) => {
-      // TODO add login
-      // const loginRes = await login(values);
-      // if (loginRes) {
-      //   history.push('/editor');
-      // } else {
-      //   toggleError(true);
-      // }
+      console.log('values', values);
+      const loginRes = await login(values);
+      if (loginRes) {
+        history.push('/editor');
+      } else {
+        toggleError(true);
+      }
     },
     [history]
   );
@@ -57,7 +57,7 @@ const LoginPage = () => {
           className={classes.formContainer}
           direction="column"
         >
-          {error && <Typography>'שם משתמש או סיסמא שגויים'</Typography>}
+          {error && <Typography>שם משתמש או סיסמא שגויים</Typography>}
           <Formik
             initialValues={{
               username: '',

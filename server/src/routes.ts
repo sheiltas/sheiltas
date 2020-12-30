@@ -4,33 +4,25 @@ import SheiltaModel, { SheiltaDocument } from './models/sheilta';
 import ArticleModel, { ArticleDocument } from './models/articles';
 import UserModel, { UserDocument } from './models/users';
 import { createToken, verifyToken } from './utils/auth';
-import { debuglog } from 'util';
+import { loginObj } from '../../types';
 
 const router = express.Router();
 
-interface loginObj {
-    username: string;
-    password: string;
-}
-
 const createBearerHeader = (authData: string) => `Bearer ${createToken(authData)}`;
 
+// Change logic to work for more users
 router.post('/login', (req, res) => {
-    console.log('req.body', req.body);
     const { username, password } = req.body as loginObj;
-    if (username === process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD) {
-        res.set('authorization', createToken(res.locals.authData)).sendStatus(200);
-        console.debug('');
-    }
     return username === process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD
-        ? res.status(200).send(createToken(username))
+        ? res.send(createToken(res.locals.authData))
         : res.sendStatus(401);
 });
 
 router.get('/keep-alive', verifyToken, (req, res) => {
-    // res.set('authorization', createToken(res.locals.authData)).sendStatus(200);
-    res.set(createBearerHeader(res.locals.authData)).send('keep-alive');
+    res.set(createBearerHeader(res.locals.authData)).sendStatus(200);
 });
+
+// Add reset password
 
 const sheiltaRoutes = createRoutes<SheiltaDocument>('sheiltas', SheiltaModel);
 

@@ -11,12 +11,9 @@ export const createToken = (username: string) => {
 export const verifyToken = (req: Request, res: Response, next: NextFunction) => {
     const bearerHeader = req.headers.authorization?.split(' ') || '';
     if (bearerHeader[0] === 'Bearer') {
-        return jwt.verify(bearerHeader[1], process.env.JWT_SECRET, (err, authData) => {
-            if (err) return res.sendStatus(403);
-            res.locals.authData = authData;
-            return next();
-        });
+        return jwt.verify(bearerHeader[1], process.env.JWT_SECRET, (err, authData) =>
+            err ? res.sendStatus(403) : (res.locals.authData = authData && next())
+        );
     }
-    console.log('wut');
     res.sendStatus(403);
 };

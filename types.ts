@@ -221,3 +221,8 @@ export type locales = "he" | "en";
 export interface ChildrenProps {
   children: ReactNode;
 }
+
+export interface loginObj {
+  username: string;
+  password: string;
+}

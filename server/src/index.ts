@@ -1,6 +1,10 @@
 import * as express from 'express';
 import * as helmet from 'helmet';
 import * as mongoose from 'mongoose';
+
+import * as morgan from 'morgan';
+import * as cors from 'cors';
+
 import routes from './routes';
 
 import ArticleModel from './models/articles';
@@ -16,9 +20,12 @@ const port = process.env.PORT;
 
 const app = express();
 
+app.use(cors());
+app.use(morgan('dev'));
+
 app.use(helmet());
 
-app.use(express.json({ limit: '1000mb' }), express.urlencoded({ extended: false }));
+app.use(express.json({ limit: '100mb' }), express.urlencoded({ extended: false }));
 
 app.use('/api', routes);
 
