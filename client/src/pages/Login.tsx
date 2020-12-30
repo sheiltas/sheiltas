@@ -26,9 +26,9 @@ const LoginPage = () => {
   const history = useHistory();
   const [error, toggleError] = useState(false);
   const { locale } = useClientProvider();
+
   const onSubmit = useCallback(
     async (values) => {
-      console.log('values', values);
       const loginRes = await login(values);
       if (loginRes) {
         history.push('/editor');

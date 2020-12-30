@@ -3,15 +3,16 @@ import { Formik, Form, Field } from 'formik';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import { Container } from '@material-ui/core';
-import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
+import { useClientProvider } from '../providers/ClientProvider';
 
 const EditorPage = () => {
+  const { locale } = useClientProvider();
   const onSubmit = useCallback(() => {}, []);
 
   return (
-    <Container>
-      {/*<Grid container justify="center" alignItems="center">*/}
+    <Grid container justify="center" alignItems="center">
+      <Typography>{locale.editorPageTitle}</Typography>
       <Paper>
         {/*<Grid item container justify="center" alignItems="center">*/}
         <Formik initialValues={{}} onSubmit={onSubmit}>
@@ -19,17 +20,14 @@ const EditorPage = () => {
             const { handleChange } = formikProps;
             return (
               <Form>
-                <Container>
-                  <Field as={TextField} onChange={handleChange} />
-                </Container>
+                <Field name="" as={TextField} onChange={handleChange} />
               </Form>
             );
           }}
         </Formik>
         {/*</Grid>*/}
       </Paper>
-      {/*</Grid>*/}
-    </Container>
+    </Grid>
   );
 };
 

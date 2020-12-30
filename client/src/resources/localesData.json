@@ -2,11 +2,19 @@
   "he": {
     "login": "התחברות",
     "username": "שם משתמש",
-    "password": "סיסמה"
+    "password": "סיסמה",
+    "editorPageTitle": "מסך הזנת תוכן",
+    "articleName": "שם המאמר",
+    "pleaseSelectYourCategory": "אנא בחר קטרוגיה",
+    "select": "בחר"
   },
   "en": {
     "login": "Login",
     "username": "Username",
-    "password": "Password"
+    "password": "Password",
+    "editorPageTitle": "Enter content screen",
+    "articleName": "Article name",
+    "pleaseSelectYourCategory": "Please select a category",
+    "select": "Select"
   }
 }

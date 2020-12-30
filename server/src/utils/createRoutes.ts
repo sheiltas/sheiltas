@@ -4,7 +4,11 @@ import { Request, Response } from 'express';
 
 type apiFunction = (req: Request, res: Response) => Promise<void>;
 
-const handleError = (res: Response, error: Error, { status = 500 }) => res.status(status).send(error);
+type handleErrorFunction = (res: Response, error: Error, options?: { status: number }) => void;
+
+export const handleError: handleErrorFunction = (res, error, { status = 500 }) =>
+    res.status(status).send(error);
+
 const handleSuccess = function <T>(
     res: Response,
     response: T | T[],

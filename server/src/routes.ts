@@ -1,5 +1,6 @@
 import * as express from 'express';
-import createRoutes from './utils/createRoutes';
+import * as bcrypt from 'bcrypt';
+import createRoutes, { handleError } from './utils/createRoutes';
 import SheiltaModel, { SheiltaDocument } from './models/sheilta';
 import ArticleModel, { ArticleDocument } from './models/articles';
 import UserModel, { UserDocument } from './models/users';
@@ -10,16 +11,31 @@ const router = express.Router();
 
 const createBearerHeader = (authData: string) => `Bearer ${createToken(authData)}`;
 
-// Change logic to work for more users
-router.post('/login', (req, res) => {
-    const { username, password } = req.body as loginObj;
-    return username === process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD
-        ? res.send(createToken(res.locals.authData))
-        : res.sendStatus(401);
+router.post('/login', async (req, res) => {
+    const { username, password: reqPassword } = req.body as loginObj;
+    try {
+        const { password: hashedPassword } = await UserModel.findOne({ username });
+
+        return (await bcrypt.compare(reqPassword, hashedPassword))
+            ? res.send(createToken(res.locals.authData))
+            : res.sendStatus(401);
+    } catch (e) {
+        handleError(res, e);
+    }
 });
 
 router.get('/keep-alive', verifyToken, (req, res) => {
     res.set(createBearerHeader(res.locals.authData)).sendStatus(200);
+});
+
+router.post('/signup', async (req, res) => {
+    try {
+        const { username, password, fullName } = req.body;
+        await UserModel.create({ username, password, fullName });
+        res.status(201).send(`${fullName} created successfully`);
+    } catch (e) {
+        handleError(res, e);
+    }
 });
 
 // Add reset password

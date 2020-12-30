@@ -1,10 +1,11 @@
 import { Document, model, Schema, SchemaTypeOpts, SchemaTimestampsConfig, ObjectId } from 'mongoose';
-import { encryptPassword } from '../utils/auth';
+import { encryptPasswordSync } from '../utils/auth';
 
 export interface User extends SchemaTimestampsConfig {
-    _id: ObjectId | string;
+    _id?: ObjectId | string;
     username: string;
     password: string;
+    fullName: string;
 }
 
 export type UserDocument = User & Document;
@@ -17,7 +18,12 @@ const userSchemaObj: Record<keyof Omit<User, '_id' | keyof SchemaTimestampsConfi
     password: {
         type: String,
         required: true,
-        set: encryptPassword
+        set: encryptPasswordSync,
+        minlength: 8
+    },
+    fullName: {
+        type: String,
+        required: true
     }
 };
 
