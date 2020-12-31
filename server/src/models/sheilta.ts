@@ -17,12 +17,12 @@ const sheiltaSchemaObj: Record<
     keyof Omit<Sheilta, '_id' | keyof SchemaTimestampsConfig>,
     SchemaTypeOpts<any>
 > = {
-    answerBy: String,
-    category: String,
-    question: String,
-    answer: String,
-    title: String,
-    subcategory: String
+    answerBy: { type: String, required: true },
+    question: { type: String, required: true },
+    answer: { type: String, required: true },
+    title: { type: String, required: true },
+    category: { type: String, required: true },
+    subcategory: { type: String, required: true }
 };
 
 const SheiltaSchema = new Schema(sheiltaSchemaObj, { timestamps: true });
