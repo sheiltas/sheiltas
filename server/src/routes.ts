@@ -5,7 +5,7 @@ import SheiltaModel, { SheiltaDocument } from './models/sheilta';
 import ArticleModel, { ArticleDocument } from './models/articles';
 import UserModel, { UserDocument } from './models/users';
 import { createToken, verifyToken } from './utils/auth';
-import { loginObj } from '../../types';
+import { loginObj } from '../../client/src/types';
 
 const router = express.Router();
 

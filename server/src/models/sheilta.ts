@@ -1,5 +1,5 @@
 import { model, SchemaTimestampsConfig, ObjectId, Document, SchemaTypeOpts, Schema } from 'mongoose';
-import { categories, subcategories } from '../../../types';
+import { categoriesKeys, subcategoriesHebrew } from '../../../client/src/types';
 
 export interface Sheilta extends SchemaTimestampsConfig {
     _id: ObjectId | string;
@@ -7,8 +7,8 @@ export interface Sheilta extends SchemaTimestampsConfig {
     title: string;
     question: string;
     answer: string;
-    category: categories;
-    subcategory: subcategories;
+    category: categoriesKeys;
+    subcategory: subcategoriesHebrew;
 }
 
 export type SheiltaDocument = Sheilta & Document;
@@ -22,7 +22,11 @@ const sheiltaSchemaObj: Record<
     answer: { type: String, required: true },
     title: { type: String, required: true },
     category: { type: String, required: true },
-    subcategory: { type: String, required: true }
+    subcategory: {
+        type: String
+        // Should be required when all categories have subcategories
+        // required: true
+    }
 };
 
 const SheiltaSchema = new Schema(sheiltaSchemaObj, { timestamps: true });

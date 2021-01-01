@@ -7,7 +7,7 @@ import React, {
   useMemo,
   useState
 } from 'react';
-import { ChildrenProps, locales } from '../../../types';
+import { ChildrenProps, locales } from '../types';
 import localesData from '../resources/localesData.json';
 
 interface context {

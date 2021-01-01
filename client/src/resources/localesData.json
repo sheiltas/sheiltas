@@ -6,7 +6,27 @@
     "editorPageTitle": "מסך הזנת תוכן",
     "articleName": "שם המאמר",
     "pleaseSelectYourCategory": "אנא בחר קטרוגיה",
-    "select": "בחר"
+    "select": "בחר",
+    "category": "קטגוריה",
+    "subcategory": "תת קטגוריה",
+
+    "aroundTheYear": "במעגל השנה",
+    "destructionToSalvation": "מחורבן לגאולה",
+    "prayersAndBlessings": "תפילות וברכות",
+    "synagogueAndSacredObjects": "בית כנסת וחפצי קדושה",
+    "sabbath": "שבת",
+    "mourning": "אבלות",
+    "kosherKitchen": "כשרות המטבח",
+    "circleOfLife": "במעגל החיים",
+    "marriageAndPurity": "אישות וטהרה",
+    "betweenAManAndHisFriend": "בין אדם לחברו",
+    "betweenIsraelAndGentiles": "בין ישראל לגוי",
+    "charity": "צדקה",
+    "faithAndView": "אמונה והשקפה",
+    "educationAndCounselingAndNames": "חינוך, ייעוץ, שמות",
+    "customs": "מנהגים",
+    "animals": "בעלי חיים",
+    "monetary": "ממונות"
   },
   "en": {
     "login": "Login",
@@ -15,6 +35,26 @@
     "editorPageTitle": "Enter content screen",
     "articleName": "Article name",
     "pleaseSelectYourCategory": "Please select a category",
-    "select": "Select"
+    "select": "Select",
+    "category": "Category",
+    "subcategory": "Subcategory",
+
+    "aroundTheYear": "במעגל השנה",
+    "destructionToSalvation": "מחורבן לגאולה",
+    "prayersAndBlessings": "תפילות וברכות",
+    "synagogueAndSacredObjects": "בית כנסת וחפצי קדושה",
+    "sabbath": "שבת",
+    "mourning": "אבלות",
+    "kosherKitchen": "כשרות המטבח",
+    "circleOfLife": "במעגל החיים",
+    "marriageAndPurity": "אישות וטהרה",
+    "betweenAManAndHisFriend": "בין אדם לחברו",
+    "betweenIsraelAndGentiles": "בין ישראל לגוי",
+    "charity": "צדקה",
+    "faithAndView": "אמונה והשקפה",
+    "educationAndCounselingAndNames": "חינוך, ייעוץ, שמות",
+    "customs": "מנהגים",
+    "animals": "בעלי חיים",
+    "monetary": "ממונות"
   }
 }

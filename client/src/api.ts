@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { loginObj } from '../../types';
+import { loginObj } from './types';
 
 const axiosInstance = axios.create({
   // baseURL: `${process.env.BASE_REQUEST_URL}/api`

@@ -1,6 +1,6 @@
 import React, { memo, useMemo } from 'react';
 import {
-  createMuiTheme,
+  unstable_createMuiStrictModeTheme as createMuiTheme,
   ThemeProvider as MuiThemeProvider
 } from '@material-ui/core/styles';
 
@@ -8,7 +8,7 @@ import { create } from 'jss';
 import rtl from 'jss-rtl';
 import { StylesProvider, jssPreset } from '@material-ui/core/styles';
 
-import { ChildrenProps } from '../../../types';
+import { ChildrenProps } from '../types';
 import { useClientProvider } from './ClientProvider';
 
 // Configure JSS

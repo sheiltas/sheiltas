@@ -1,12 +1,12 @@
 import { Document, model, Schema, SchemaTypeOpts, SchemaTimestampsConfig, ObjectId } from 'mongoose';
-import { categories, subcategories } from '../../../types';
+import { categoriesKeys, subcategoriesHebrew } from '../../../client/src/types';
 
 export interface Article extends SchemaTimestampsConfig {
     _id: ObjectId | string;
     author: string;
     content: string;
-    category: categories;
-    subcategory: subcategories;
+    category: categoriesKeys;
+    subcategory: subcategoriesHebrew;
 }
 
 export type ArticleDocument = Article & Document;
