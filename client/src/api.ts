@@ -1,40 +1,47 @@
 import axios from 'axios';
-import { loginObj } from './types';
+import { loginObj, routes } from './types';
+import { Article } from '../../server/src/models/articles';
 
 const axiosInstance = axios.create({
-  // baseURL: `${process.env.BASE_REQUEST_URL}/api`
+  // baseURL: `/api` should be this when server serves the site
   baseURL: `http://localhost:4000/api`
 });
 
-const login = async (loginData: loginObj) => {
-  try {
-    const { data: token } = await axiosInstance.post('/login', loginData);
-    localStorage.setItem('token', token);
-    axiosInstance.defaults.headers.authorization = token;
-    return true;
-  } catch (e) {
-    console.log('e', e);
-    return false;
+const authApi = {
+  login: async (loginData: loginObj) => {
+    try {
+      const { data: token } = await axiosInstance.post(
+        `/${routes.LOGIN}`,
+        loginData
+      );
+      localStorage.setItem('token', token);
+      axiosInstance.defaults.headers.authorization = token;
+      return true;
+    } catch (e) {
+      // console.log('e', e);
+      return false;
+    }
+  },
+  keepAlive: async () => {
+    try {
+      const { data: token } = await axiosInstance.get(`/${routes.KEEP_ALIVE}`);
+      localStorage.setItem('token', token);
+      axiosInstance.defaults.headers.authorization = token;
+    } catch (e) {
+      console.log('e', e);
+      return e;
+    }
   }
 };
 
-const keepAlive = async () => {
-  try {
-    const { data: token } = await axiosInstance.get('/keep-alive');
-    localStorage.setItem('token', token);
-    axiosInstance.defaults.headers.authorization = token;
-  } catch (e) {
-    return e;
-  }
-};
-
-function createApi<T>(apiName: string) {
+function createApi<T>(apiName: routes) {
   return {
     name: apiName,
-    get: (params: unknown) => axiosInstance.get(`/${apiName}`, { params })
+    get: (params: unknown) => axiosInstance.get(`/${apiName}`, { params }),
+    post: (body: Omit<T, '_id'>) => axiosInstance.post(`${apiName}`, body)
   };
 }
 
-// const articlesApi = createApi();
+const articlesApi = createApi<Article>(routes.ARTICLES);
 
-export { login, keepAlive };
+export { authApi, articlesApi };

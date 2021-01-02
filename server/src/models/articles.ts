@@ -24,7 +24,10 @@ const articleSchemaObj: Record<
         required: true
     },
     category: { type: String, required: true },
-    subcategory: { type: String, required: true }
+    subcategory: {
+        type: String
+        // required: true
+    }
 };
 
 const ArticleSchema: Schema = new Schema(articleSchemaObj);

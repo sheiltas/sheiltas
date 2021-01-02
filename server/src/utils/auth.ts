@@ -11,7 +11,7 @@ export const verifyPassword = async (rawPassword: string, encryptedPassword: str
     encryptedPassword === (await encryptPassword(rawPassword));
 
 export const createToken = (username: string) =>
-    jwt.sign({ username }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_TIME });
+    jwt.sign({ username }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
 export const verifyToken = (req: Request, res: Response, next: NextFunction) => {
     const bearerHeader = req.headers.authorization?.split(' ') || '';

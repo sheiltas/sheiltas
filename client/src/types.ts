@@ -1,6 +1,20 @@
-// @ts-ignore
 import { ReactNode } from 'react';
 import { categoriesKeysArray } from './utils';
+
+// Type guards
+export function isType<T>(obj: T | any, keys: string | string[]): obj is T {
+  if (!obj) {
+    return false;
+  }
+
+  if (Array.isArray(obj)) {
+    return Array.isArray(keys)
+      ? obj.every((arrItem: T | any) => keys.every((key) => arrItem[key]))
+      : obj.every((arrItem: T | any) => arrItem[keys]);
+  }
+
+  return Array.isArray(keys) ? keys.every((key) => obj[key]) : obj[keys];
+}
 
 // Sheilta categories
 export type categoriesKeys = typeof categoriesKeysArray[number];
@@ -210,4 +224,13 @@ export interface ChildrenProps {
 export interface loginObj {
   username: string;
   password: string;
+}
+
+export enum routes {
+  SHEILTAS = 'sheiltas',
+  ARTICLES = 'articles',
+  LOGIN = 'login',
+  KEEP_ALIVE = 'keep-alive',
+  SIGNUP = 'signup',
+  USERS = 'users'
 }

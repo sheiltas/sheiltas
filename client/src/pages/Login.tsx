@@ -8,7 +8,7 @@ import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import { login } from '../api';
+import { authApi } from '../api';
 import { useClientProvider } from '../providers/ClientProvider';
 
 const createClasses = makeStyles((theme) => ({
@@ -34,7 +34,7 @@ const LoginPage = () => {
 
   const onSubmit = useCallback(
     async (values) => {
-      const loginRes = await login(values);
+      const loginRes = await authApi.login(values);
       if (loginRes) {
         history.push('/editor');
       } else {

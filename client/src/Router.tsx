@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 import { Switch, Route, BrowserRouter } from 'react-router-dom';
 import LoginPage from './pages/Login';
 import EditorPage from './pages/Editor';
+import PrivateRoute from './pages/PrivateRoute';
 
 const Router = () => {
   return (
@@ -11,9 +12,9 @@ const Router = () => {
         <Route path="/" exact>
           <LoginPage />
         </Route>
-        <Route path="/editor">
+        <PrivateRoute path="/editor">
           <EditorPage />
-        </Route>
+        </PrivateRoute>
       </Switch>
     </BrowserRouter>
   );
