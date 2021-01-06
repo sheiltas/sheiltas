@@ -1,14 +1,16 @@
 import axios from 'axios';
 import { loginObj, routes } from './types';
-import { Article } from '../../server/src/models/articles';
+import { Article } from './types';
+
+const baseURL =
+  process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:4000/api';
 
 const axiosInstance = axios.create({
-  // baseURL: `/api` should be this when server serves the site
-  baseURL: `http://localhost:4000/api`
+  baseURL
 });
 
 const authApi = {
-  login: async (loginData: loginObj) => {
+  login: async (loginData: loginObj): Promise<string | boolean> => {
     try {
       const { data: token } = await axiosInstance.post(
         `/${routes.LOGIN}`,
@@ -16,7 +18,8 @@ const authApi = {
       );
       localStorage.setItem('token', token);
       axiosInstance.defaults.headers.authorization = token;
-      return true;
+      return token;
+      // return true;
     } catch (e) {
       // console.log('e', e);
       return false;
@@ -26,7 +29,7 @@ const authApi = {
     try {
       const { data: token } = await axiosInstance.get(`/${routes.KEEP_ALIVE}`);
       localStorage.setItem('token', token);
-      axiosInstance.defaults.headers.authorization = token;
+      axiosInstance.defaults.headers.authorization = `Bearer ${token}`;
     } catch (e) {
       console.log('e', e);
       return e;
@@ -37,8 +40,19 @@ const authApi = {
 function createApi<T>(apiName: routes) {
   return {
     name: apiName,
-    get: (params: unknown) => axiosInstance.get(`/${apiName}`, { params }),
-    post: (body: Omit<T, '_id'>) => axiosInstance.post(`${apiName}`, body)
+    get: async (params: unknown) =>
+      await axiosInstance.get(`/${apiName}`, { params }),
+    post: async (body: Omit<T, '_id'>) => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        axiosInstance.defaults.headers.authorization = `Bearer ${token}`;
+        try {
+          return await axiosInstance.post(`${apiName}`, body);
+        } catch (e) {
+          return e;
+        }
+      }
+    }
   };
 }
 

@@ -12,6 +12,8 @@
     "subcategory": "תת קטגוריה",
     "upload": "העלה",
     "requiredField": "שדה חובה",
+    "articleAddedSuccessfully": "המאמר נוסף בהצלחה",
+    "serverError": "שגיאת שרת",
 
     "aroundTheYear": "במעגל השנה",
     "destructionToSalvation": "מחורבן לגאולה",
@@ -44,6 +46,8 @@
     "subcategory": "Subcategory",
     "upload": "Upload",
     "requiredField": "Required field",
+    "articleAddedSuccessfully": "Article added successfully",
+    "serverError": "Server error",
 
     "aroundTheYear": "במעגל השנה",
     "destructionToSalvation": "מחורבן לגאולה",

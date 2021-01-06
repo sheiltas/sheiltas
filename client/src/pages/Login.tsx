@@ -8,7 +8,6 @@ import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import { authApi } from '../api';
 import { useClientProvider } from '../providers/ClientProvider';
 
 const createClasses = makeStyles((theme) => ({
@@ -30,18 +29,19 @@ const LoginPage = () => {
   const classes = createClasses();
   const history = useHistory();
   const [error, toggleError] = useState(false);
-  const { locale } = useClientProvider();
+  const { locale, login } = useClientProvider();
 
   const onSubmit = useCallback(
     async (values) => {
-      const loginRes = await authApi.login(values);
+      const loginRes = await login(values);
+      console.log('loginRes', loginRes);
       if (loginRes) {
         history.push('/editor');
       } else {
         toggleError(true);
       }
     },
-    [history]
+    [history, login]
   );
 
   return (
@@ -90,7 +90,12 @@ const LoginPage = () => {
                     />
                     <Grid container justify="center">
                       <Grid item xs={7}>
-                        <Button type="submit" className={classes.button}>
+                        <Button
+                          type="submit"
+                          variant="contained"
+                          color="secondary"
+                          className={classes.button}
+                        >
                           {locale.login}
                         </Button>
                       </Grid>

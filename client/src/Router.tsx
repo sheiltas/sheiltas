@@ -9,9 +9,11 @@ const Router = () => {
     <BrowserRouter>
       <Switch>
         {/*  Should be /login*/}
+        {/*<PrivateRoute path="/">*/}
         <Route path="/" exact>
           <LoginPage />
         </Route>
+        {/*</PrivateRoute>*/}
         <PrivateRoute path="/editor">
           <EditorPage />
         </PrivateRoute>

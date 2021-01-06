@@ -3,7 +3,7 @@ import { categoriesKeys, subcategoriesHebrew } from '../../../client/src/types';
 
 export interface Sheilta extends SchemaTimestampsConfig {
     _id: ObjectId | string;
-    answerBy?: string;
+    author?: string;
     title: string;
     question: string;
     answer: string;
@@ -17,7 +17,7 @@ const sheiltaSchemaObj: Record<
     keyof Omit<Sheilta, '_id' | keyof SchemaTimestampsConfig>,
     SchemaTypeOpts<any>
 > = {
-    answerBy: { type: String, required: true },
+    author: { type: String, required: true },
     question: { type: String, required: true },
     answer: { type: String, required: true },
     title: { type: String, required: true },

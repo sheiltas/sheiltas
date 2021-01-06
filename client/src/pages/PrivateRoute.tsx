@@ -22,9 +22,15 @@ const PrivateRoute = (props: Props) => {
     }
     return false;
   }, []);
-
+  console.log('isAuthorized', isAuthorized);
+  console.log('path', path);
   return isAuthorized ? (
-    <Route path={path}>{children}</Route>
+    // TODO remove when more routes
+    path === '/' ? (
+      <Redirect to={'/editor'} />
+    ) : (
+      <Route path={path}>{children}</Route>
+    )
   ) : (
     <Redirect to={'/'} />
   );

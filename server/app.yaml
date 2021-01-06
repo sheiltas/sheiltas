@@ -1,1 +1,8 @@
 runtime: nodejs14
+
+env_variables:
+  JWT_SECRET: "AD*&$Hfklv)(&g!*jdjskvnlao(F&#H!#JKm,f;dsjvodpgksj*(#^@"
+  JWT_EXPIRE: "30d"
+  DB_URL: "mongodb+srv://sheiltas-admin:8K%22%7D6%26%7D%7D%2CVqsy%5C9rP%3FUq@cluster0.djq6y.mongodb.net/main?retryWrites=true&w=majority"
+
+entrypoint: "npm start"

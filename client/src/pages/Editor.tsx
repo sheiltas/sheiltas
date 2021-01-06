@@ -4,7 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { AppBar } from '@material-ui/core';
+import AppBar from '@material-ui/core/AppBar';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import MuiSelect from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -12,6 +12,9 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import useTheme from '@material-ui/core/styles/useTheme';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import { articlesApi } from '../api';
 import { useClientProvider } from '../providers/ClientProvider';
@@ -20,8 +23,7 @@ import {
   categoriesKeysArray,
   mapCategoriesKeysToHebrewSubcategories
 } from '../utils';
-import { Article } from '../../../server/src/models/articles';
-import FormHelperText from '@material-ui/core/FormHelperText';
+import { Article } from '../types';
 
 const createClasses = makeStyles((theme) => ({
   appBar: {
@@ -32,6 +34,9 @@ const createClasses = makeStyles((theme) => ({
   paper: {
     backgroundColor: '#ccbb9e !important',
     padding: '30px'
+  },
+  input: {
+    backgroundColor: theme.palette.background.default
   }
 }));
 
@@ -68,6 +73,7 @@ type selectValues = 'category' | 'subcategory';
 
 const Select = memo((props: SelectProps<selectValues>) => {
   const { data } = props;
+  const classes = createClasses();
   const { label, name, options } = data;
   const { handleChange, errors, touched } = useFormikContext<FormikValues>();
   const error = useMemo(() => touched[name] && errors[name], [
@@ -89,6 +95,9 @@ const Select = memo((props: SelectProps<selectValues>) => {
         MenuProps={{
           disablePortal: true
         }}
+        inputProps={{
+          className: classes.input
+        }}
       >
         {options.map((option) => {
           const { value, name } = option;
@@ -104,7 +113,7 @@ const Select = memo((props: SelectProps<selectValues>) => {
   );
 });
 
-const FormikForm = memo(() => {
+const FormikForm = () => {
   const {
     handleChange,
     values,
@@ -112,6 +121,7 @@ const FormikForm = memo(() => {
     touched
   } = useFormikContext<FormikValues>();
   const { locale } = useClientProvider();
+  const classes = createClasses();
 
   const { category } = values;
 
@@ -136,10 +146,16 @@ const FormikForm = memo(() => {
     [category, locale.category, locale.subcategory, mapKeyToOption]
   );
 
+  const theme = useTheme();
+  console.log('theme', theme);
+  const isMdDown = useMediaQuery(theme.breakpoints.down('md'));
+  console.log('isMdDown', isMdDown);
+  const rows = useMemo(() => (isMdDown ? 5 : 10), [isMdDown]);
+  console.log('rows', rows);
   return (
-    <Form>
-      <Grid container direction="column">
-        <Box my={1}>
+    <Grid container component={Form}>
+      <Grid container>
+        <Grid component={Box} container my={1}>
           <Field
             name="title"
             as={TextField}
@@ -149,14 +165,18 @@ const FormikForm = memo(() => {
             fullWidth
             helperText={touched.title && errors.title}
             error={errors.title && touched.title}
+            color={'textPrimary'}
+            InputProps={{
+              className: classes.input
+            }}
           />
-        </Box>
+        </Grid>
         {categoriesData.map((data) => (
-          <Box my={1} key={data.label}>
+          <Grid container component={Box} my={1} key={data.label}>
             <Select data={data} />
-          </Box>
+          </Grid>
         ))}
-        <Box my={1}>
+        <Grid container component={Box} my={1}>
           <Field
             name="content"
             as={TextField}
@@ -164,17 +184,22 @@ const FormikForm = memo(() => {
             onChange={handleChange}
             label={locale.content}
             variant="outlined"
+            fullWidth
+            rows={rows}
             helperText={touched.content && errors.content}
             error={errors.content && touched.content}
+            InputProps={{
+              className: classes.input
+            }}
           />
-        </Box>
-        <Button type="submit">
+        </Grid>
+        <Button variant="contained" color="secondary" type="submit">
           <Typography>{locale.upload}</Typography>
         </Button>
       </Grid>
-    </Form>
+    </Grid>
   );
-});
+};
 
 const EditorPage = () => {
   const classes = createClasses();
@@ -201,13 +226,19 @@ const EditorPage = () => {
     [locale.requiredField]
   );
 
-  const onSubmit = useCallback(async (values: FormikValues) => {
-    if (isType<Omit<Article, '_id'>>(values, ['content', 'category'])) {
-      console.log('wut');
-      const res = await articlesApi.post({ ...values, author: 'Me' });
-      console.log('res', res);
-    }
-  }, []);
+  const onSubmit = useCallback(
+    async (values: FormikValues) => {
+      if (isType<Omit<Article, '_id'>>(values, ['content', 'category'])) {
+        const res = await articlesApi.post(values);
+        alert(
+          res.status === 201
+            ? locale.articleAddedSuccessfully
+            : locale.serverError
+        );
+      }
+    },
+    [locale.articleAddedSuccessfully, locale.serverError]
+  );
 
   return (
     <Grid container justify="center" alignItems="center">
@@ -217,8 +248,10 @@ const EditorPage = () => {
           {selectedLanguage !== 'he' && '!'}
         </Typography>
       </AppBar>
-      <Paper className={classes.paper}>
-        <Typography>{locale.editorPageTitle}:</Typography>
+      <Box className={classes.paper} component={Paper} width="100%" mx={2}>
+        <Grid container component={Typography}>
+          {locale.editorPageTitle}:
+        </Grid>
         <Formik
           validate={validate}
           initialValues={initialValues}
@@ -226,7 +259,7 @@ const EditorPage = () => {
         >
           <FormikForm />
         </Formik>
-      </Paper>
+      </Box>
     </Grid>
   );
 };

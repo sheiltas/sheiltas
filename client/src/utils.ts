@@ -175,3 +175,11 @@ export const mapCategoriesKeysToHebrewSubcategories: Record<
   faithAndView: [],
   customs: []
 };
+
+export const decodeJwt = (token: string) => {
+  try {
+    return JSON.parse(atob(token.split('.')[1]));
+  } catch (e) {
+    return { e };
+  }
+};

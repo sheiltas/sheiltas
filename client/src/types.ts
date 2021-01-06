@@ -1,6 +1,28 @@
 import { ReactNode } from 'react';
 import { categoriesKeysArray } from './utils';
 
+interface SchemaTimestampsConfig {
+  createdAt?: boolean | string;
+  updatedAt?: boolean | string;
+  currentTime?: () => Date | number;
+}
+
+// Models
+export interface User extends SchemaTimestampsConfig {
+  _id: string;
+  username: string;
+  password?: string;
+  fullName: string;
+}
+
+export interface Article extends SchemaTimestampsConfig {
+  _id: string;
+  author: User | string;
+  content: string;
+  category: categoriesKeys;
+  subcategory: subcategoriesHebrew;
+}
+
 // Type guards
 export function isType<T>(obj: T | any, keys: string | string[]): obj is T {
   if (!obj) {
@@ -233,4 +255,10 @@ export enum routes {
   KEEP_ALIVE = 'keep-alive',
   SIGNUP = 'signup',
   USERS = 'users'
+}
+
+export interface authData {
+  fullName: string;
+  username: string;
+  _id: string;
 }

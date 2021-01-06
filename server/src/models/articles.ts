@@ -1,9 +1,10 @@
 import { Document, model, Schema, SchemaTypeOpts, SchemaTimestampsConfig, ObjectId } from 'mongoose';
 import { categoriesKeys, subcategoriesHebrew } from '../../../client/src/types';
+import UserModel, { User } from './users';
 
 export interface Article extends SchemaTimestampsConfig {
     _id: ObjectId | string;
-    author: string;
+    author: ObjectId | User;
     content: string;
     category: categoriesKeys;
     subcategory: subcategoriesHebrew;
@@ -16,7 +17,9 @@ const articleSchemaObj: Record<
     SchemaTypeOpts<any>
 > = {
     author: {
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: UserModel,
+        index: true,
         required: true
     },
     content: {

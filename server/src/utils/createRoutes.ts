@@ -1,6 +1,6 @@
 import * as express from 'express';
 import { Document, Error, Model } from 'mongoose';
-import { Request, Response } from 'express';
+import { Request, RequestHandler, Response } from 'express';
 
 type apiFunction = (req: Request, res: Response) => Promise<void>;
 
@@ -11,7 +11,7 @@ export const handleError: handleErrorFunction = (res, error, options = { status:
     res.status(status).send(error);
 };
 
-const handleSuccess = function <T>(
+export const handleSuccess = function <T>(
     res: Response,
     response: T | T[],
     options = {
@@ -22,7 +22,7 @@ const handleSuccess = function <T>(
     res.status(status).send(response);
 };
 
-const tryCatchHandler = async (
+export const tryCatchHandler = async (
     tryFunc: apiFunction,
     req: Request,
     res: Response,
@@ -38,9 +38,21 @@ const tryCatchHandler = async (
     }
 };
 
-const createRoutes = function <T extends Document>(routeName: string, model: Model<T>) {
+const createRoutes = function <T extends Document>(
+    routeName: string,
+    model: Model<T>,
+    options: {
+        middleware?: Array<RequestHandler> | RequestHandler;
+    } = {}
+    // middleware?: RequestHandler
+) {
+    const { middleware } = options;
     const baseUrl = `/${routeName}`;
     const router = express.Router();
+
+    if (middleware) {
+        router.use(baseUrl, middleware);
+    }
 
     const getFunction = async (req: Request, res: Response) =>
         handleSuccess<T>(res, await model.find(req.body));
@@ -50,7 +62,9 @@ const createRoutes = function <T extends Document>(routeName: string, model: Mod
     });
 
     const postFunction = async (req: Request, res: Response) => {
-        handleSuccess<T>(res, await model.create(req.body), { status: 201 });
+        handleSuccess<T>(res, await model.create({ ...req.body, author: res.locals.authData?._id }), {
+            status: 201
+        });
     };
 
     router.post(baseUrl, async (req, res) => await tryCatchHandler(postFunction, req, res));

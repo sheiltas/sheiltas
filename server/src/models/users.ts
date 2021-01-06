@@ -4,7 +4,7 @@ import { encryptPasswordSync } from '../utils/auth';
 export interface User extends SchemaTimestampsConfig {
     _id?: ObjectId | string;
     username: string;
-    password: string;
+    password?: string;
     fullName: string;
 }
 
@@ -28,6 +28,12 @@ const userSchemaObj: Record<keyof Omit<User, '_id' | keyof SchemaTimestampsConfi
 };
 
 const UserSchema: Schema = new Schema(userSchemaObj);
+
+UserSchema.method('toJSON', function (this: UserDocument) {
+    const user = this.toObject();
+    delete user.password;
+    return user;
+});
 
 const UserModel = model<UserDocument>('users', UserSchema);
 
