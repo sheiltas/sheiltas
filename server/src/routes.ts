@@ -44,11 +44,13 @@ router.post(`/${routes.SIGNUP}`, async (req, res) => {
 // Add reset password
 
 const sheiltaRoutes = createRoutes<SheiltaDocument>(routes.SHEILTAS, SheiltaModel, {
-    middleware: verifyToken
+    middleware: verifyToken,
+    exclude: ['delete']
 });
 
 const articlesRoutes = createRoutes<ArticleDocument>(routes.ARTICLES, ArticleModel, {
-    middleware: verifyToken
+    middleware: verifyToken,
+    exclude: ['delete']
 });
 // articlesRoutes.prototype.post =
 //     (routes.ARTICLES,
@@ -69,6 +71,8 @@ const articlesRoutes = createRoutes<ArticleDocument>(routes.ARTICLES, ArticleMod
 //     }
 // });
 
-const usersRoutes = createRoutes<UserDocument>(routes.USERS, UserModel);
+const usersRoutes = createRoutes<UserDocument>(routes.USERS, UserModel, {
+    exclude: ['delete', 'put']
+});
 
 export default [usersRoutes, sheiltaRoutes, articlesRoutes, router];

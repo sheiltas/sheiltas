@@ -9,7 +9,8 @@
         "start": "node dist/server/src/index.js",
         "start:dev": "node --inspect=5858 -r ts-node/register -r dotenv/config ./src/index.ts",
         "start:watch": "nodemon",
-        "build": "tsc --outDir dist"
+        "build": "tsc --outDir dist",
+        "deploy:dev": "gcloud app deploy --project=sheiltas-dev app-dev.yaml"
     },
     "dependencies": {
         "axios": "^0.21.0",
@@ -30,7 +31,7 @@
         "@types/morgan": "^1.9.2",
         "@types/node": "^14.14.16",
         "dotenv": "^8.2.0",
-        "eslint": "^7.16.0",
+        "eslint": "^7.17.0",
         "eslint-plugin-import": "^2.22.1",
         "nodemon": "^2.0.6",
         "prettier": "^2.2.1",
@@ -43,6 +44,14 @@
         "printWidth": 110,
         "tabWidth": 4,
         "trailingComma": "none"
+    },
+    "eslintConfig": {
+        "ecmaFeatures": {
+            "arrowFunctions": false
+        },
+        "rules": {
+            "no-ternary": "warn"
+        }
     },
     "nodemonConfig": {
         "ignore": [

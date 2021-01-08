@@ -1,12 +1,6 @@
 import { ReactNode } from 'react';
 import { categoriesKeysArray } from './utils';
 
-interface SchemaTimestampsConfig {
-  createdAt?: boolean | string;
-  updatedAt?: boolean | string;
-  currentTime?: () => Date | number;
-}
-
 // Models
 export interface User extends SchemaTimestampsConfig {
   _id: string;
@@ -237,16 +231,10 @@ export type subcategoriesHebrew =
   | educationAndCounselingAndNamesSubcategories
   | mourningSubcategories;
 
+// enums
 export type locales = 'he' | 'en';
 
-export interface ChildrenProps {
-  children: ReactNode;
-}
-
-export interface loginObj {
-  username: string;
-  password: string;
-}
+export type methods = 'post' | 'get' | 'delete' | 'put';
 
 export enum routes {
   SHEILTAS = 'sheiltas',
@@ -255,6 +243,21 @@ export enum routes {
   KEEP_ALIVE = 'keep-alive',
   SIGNUP = 'signup',
   USERS = 'users'
+}
+
+interface SchemaTimestampsConfig {
+  createdAt?: boolean | string;
+  updatedAt?: boolean | string;
+  currentTime?: () => Date | number;
+}
+
+export interface ChildrenProps {
+  children: ReactNode;
+}
+
+export interface loginObj {
+  username: string;
+  password: string;
 }
 
 export interface authData {

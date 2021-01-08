@@ -1,6 +1,7 @@
 import * as express from 'express';
 import { Document, Error, Model } from 'mongoose';
 import { Request, RequestHandler, Response } from 'express';
+import { methods } from '../../../client/src/types';
 
 type apiFunction = (req: Request, res: Response) => Promise<void>;
 
@@ -43,10 +44,12 @@ const createRoutes = function <T extends Document>(
     model: Model<T>,
     options: {
         middleware?: Array<RequestHandler> | RequestHandler;
-    } = {}
-    // middleware?: RequestHandler
+        exclude?: Array<methods>;
+    } = {
+        exclude: []
+    }
 ) {
-    const { middleware } = options;
+    const { middleware, exclude = [] } = options;
     const baseUrl = `/${routeName}`;
     const router = express.Router();
 
@@ -57,27 +60,38 @@ const createRoutes = function <T extends Document>(
     const getFunction = async (req: Request, res: Response) =>
         handleSuccess<T>(res, await model.find(req.body));
 
-    router.get(baseUrl, async (req, res) => {
-        await tryCatchHandler(getFunction, req, res);
-    });
-
     const postFunction = async (req: Request, res: Response) => {
         handleSuccess<T>(res, await model.create({ ...req.body, author: res.locals.authData?._id }), {
             status: 201
         });
     };
 
-    router.post(baseUrl, async (req, res) => await tryCatchHandler(postFunction, req, res));
-
     const deleteFunc = async (req: Request, res: Response) =>
         handleSuccess<T>(res, await model.findOneAndDelete(req.body));
-
-    router.delete(baseUrl, async (req, res) => await tryCatchHandler(deleteFunc, req, res));
 
     const putFunction = async (req: Request, res: Response) =>
         handleSuccess<T>(res, await model.findOneAndUpdate(req.body));
 
-    router.put(baseUrl, async (req, res) => await tryCatchHandler(putFunction, req, res, { errStatus: 304 }));
+    if (!exclude.includes('get')) {
+        router.get(baseUrl, async (req, res) => {
+            await tryCatchHandler(getFunction, req, res);
+        });
+    }
+
+    if (!exclude.includes('post')) {
+        router.post(baseUrl, async (req, res) => await tryCatchHandler(postFunction, req, res));
+    }
+
+    if (!exclude.includes('delete')) {
+        router.delete(baseUrl, async (req, res) => await tryCatchHandler(deleteFunc, req, res));
+    }
+
+    if (!exclude.includes('put')) {
+        router.put(
+            baseUrl,
+            async (req, res) => await tryCatchHandler(putFunction, req, res, { errStatus: 304 })
+        );
+    }
 
     return router;
 };

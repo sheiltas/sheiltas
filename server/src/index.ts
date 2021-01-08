@@ -7,27 +7,29 @@ import * as cors from 'cors';
 
 import routes from './routes';
 
-import ArticleModel from './models/articles';
-import SheiltaModel from './models/sheilta';
-
-// Remove in production
 import * as path from 'path';
-import * as fs from 'fs';
+
+const isProduction = process.env.NODE_ENV === 'production';
 
 const dbUrl = process.env.DB_URL;
 
 const port = process.env.PORT;
 
-const sitePath = path.join(__dirname, process.env.NODE_ENV === 'production' ? '../../../build' : '../build');
+mongoose.set('useCreateIndex', true);
+
+const sitePath = path.join(__dirname, isProduction ? '../../../build' : '../build');
 
 const app = express();
 
-app.use(cors());
+if (!isProduction) {
+    app.use(cors());
+}
+
 app.use(morgan('dev'));
 
 app.use(helmet());
 
-app.use(express.json({ limit: '100mb' }), express.urlencoded({ extended: false }));
+app.use(express.json({ limit: '60mb' }), express.urlencoded({ extended: false }));
 
 app.use('/api', routes);
 
@@ -46,7 +48,7 @@ app.listen(port, async () => {
 
     try {
         await mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true });
-        console.log('Connected to DB', process.env.NODE_ENV === 'development' && dbUrl);
+        console.log('Connected to DB', isProduction ? '' : dbUrl);
 
         // Init DB remove in production
         // const initSheiltas = fs.readFileSync(
