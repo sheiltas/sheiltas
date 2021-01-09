@@ -22,7 +22,7 @@ const sitePath = path.join(__dirname, isProduction ? '../../../build' : '../buil
 const app = express();
 
 if (!isProduction) {
-    app.use(cors());
+    // app.use(cors());
 }
 
 app.use(morgan('dev'));

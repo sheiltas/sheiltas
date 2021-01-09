@@ -36,7 +36,6 @@ router.post(`/${routes.SIGNUP}`, async (req, res) => {
         await UserModel.create({ username, password, fullName });
         res.status(201).send(`${fullName} created successfully`);
     } catch (e) {
-        console.log('e', e);
         handleError(res, e);
     }
 });
@@ -50,7 +49,18 @@ const sheiltaRoutes = createRoutes<SheiltaDocument>(routes.SHEILTAS, SheiltaMode
 
 const articlesRoutes = createRoutes<ArticleDocument>(routes.ARTICLES, ArticleModel, {
     middleware: verifyToken,
-    exclude: ['delete']
+    exclude: ['delete'],
+    overrides: {
+        get: async (req, res) => {
+            try {
+                res.send(await ArticleModel.find({ ...req.body }).populate('author', 'username'));
+            } catch (e) {
+                //
+                console.log('herro', e);
+                handleError(res, e);
+            }
+        }
+    }
 });
 // articlesRoutes.prototype.post =
 //     (routes.ARTICLES,

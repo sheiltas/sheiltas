@@ -45,11 +45,13 @@ const createRoutes = function <T extends Document>(
     options: {
         middleware?: Array<RequestHandler> | RequestHandler;
         exclude?: Array<methods>;
+        overrides?: Partial<Record<methods, apiFunction>>;
     } = {
-        exclude: []
+        exclude: [],
+        overrides: {}
     }
 ) {
-    const { middleware, exclude = [] } = options;
+    const { middleware, exclude = [], overrides = {} } = options;
     const baseUrl = `/${routeName}`;
     const router = express.Router();
 
@@ -74,22 +76,29 @@ const createRoutes = function <T extends Document>(
 
     if (!exclude.includes('get')) {
         router.get(baseUrl, async (req, res) => {
-            await tryCatchHandler(getFunction, req, res);
+            await tryCatchHandler(overrides.get || getFunction, req, res);
         });
     }
 
     if (!exclude.includes('post')) {
-        router.post(baseUrl, async (req, res) => await tryCatchHandler(postFunction, req, res));
+        router.post(
+            baseUrl,
+            async (req, res) => await tryCatchHandler(overrides.post || postFunction, req, res)
+        );
     }
 
     if (!exclude.includes('delete')) {
-        router.delete(baseUrl, async (req, res) => await tryCatchHandler(deleteFunc, req, res));
+        router.delete(
+            baseUrl,
+            async (req, res) => await tryCatchHandler(overrides.delete || deleteFunc, req, res)
+        );
     }
 
     if (!exclude.includes('put')) {
         router.put(
             baseUrl,
-            async (req, res) => await tryCatchHandler(putFunction, req, res, { errStatus: 304 })
+            async (req, res) =>
+                await tryCatchHandler(overrides.put || putFunction, req, res, { errStatus: 304 })
         );
     }
 

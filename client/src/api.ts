@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosInstance } from 'axios';
 import { loginObj, routes } from './types';
 import { Article } from './types';
 
@@ -37,20 +37,32 @@ const authApi = {
   }
 };
 
+const addToken = (axiosInstance: AxiosInstance) => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    axiosInstance.defaults.headers.authorization = `Bearer ${token}`;
+    return axiosInstance;
+  }
+  throw Error('No token');
+};
+
 function createApi<T>(apiName: routes) {
   return {
     name: apiName,
-    get: async (params: unknown) =>
-      await axiosInstance.get(`/${apiName}`, { params }),
-    post: async (body: Omit<T, '_id'>) => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        axiosInstance.defaults.headers.authorization = `Bearer ${token}`;
-        try {
-          return await axiosInstance.post(`${apiName}`, body);
-        } catch (e) {
-          return e;
-        }
+    get: async (params: unknown): Promise<T[]> => {
+      try {
+        addToken(axiosInstance);
+        return (await axiosInstance.get(`/${apiName}`, { params })).data;
+      } catch (e) {
+        return e;
+      }
+    },
+    post: async (body: Omit<T, '_id'>): Promise<T | string> => {
+      try {
+        addToken(axiosInstance);
+        return await axiosInstance.post(`${apiName}`, body);
+      } catch (e) {
+        return e;
       }
     }
   };

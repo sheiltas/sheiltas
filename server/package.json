@@ -20,7 +20,8 @@
         "helmet": "^4.2.0",
         "jsonwebtoken": "^8.5.1",
         "mongoose": "^5.11.8",
-        "morgan": "^1.10.0"
+        "morgan": "^1.10.0",
+        "react-query-devtools": "^2.6.3"
     },
     "devDependencies": {
         "@types/bcrypt": "^3.0.0",

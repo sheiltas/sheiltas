@@ -8,6 +8,7 @@ export interface Article extends SchemaTimestampsConfig {
     content: string;
     category: categoriesKeys;
     subcategory: subcategoriesHebrew;
+    title: string;
 }
 
 export type ArticleDocument = Article & Document;
@@ -20,6 +21,10 @@ const articleSchemaObj: Record<
         type: Schema.Types.ObjectId,
         ref: UserModel,
         index: true,
+        required: true
+    },
+    title: {
+        type: String,
         required: true
     },
     content: {

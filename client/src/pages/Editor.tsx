@@ -24,6 +24,8 @@ import {
   mapCategoriesKeysToHebrewSubcategories
 } from '../utils';
 import { Article } from '../types';
+import Header from '../components/Header';
+import { useHistory } from 'react-router';
 
 const createClasses = makeStyles((theme) => ({
   appBar: {
@@ -147,11 +149,9 @@ const FormikForm = () => {
   );
 
   const theme = useTheme();
-  console.log('theme', theme);
   const isMdDown = useMediaQuery(theme.breakpoints.down('md'));
-  console.log('isMdDown', isMdDown);
   const rows = useMemo(() => (isMdDown ? 5 : 10), [isMdDown]);
-  console.log('rows', rows);
+
   return (
     <Grid container component={Form}>
       <Grid container>
@@ -203,7 +203,8 @@ const FormikForm = () => {
 
 const EditorPage = () => {
   const classes = createClasses();
-  const { locale, selectedLanguage } = useClientProvider();
+  const { locale } = useClientProvider();
+  const history = useHistory();
 
   const initialValues: FormikValues = useMemo(
     () => ({
@@ -214,6 +215,10 @@ const EditorPage = () => {
     }),
     []
   );
+
+  const goToContentsPage = useCallback(() => {
+    history.push('/contents');
+  }, [history]);
 
   const validate = useCallback(
     (values: FormikValues) =>
@@ -231,7 +236,7 @@ const EditorPage = () => {
       if (isType<Omit<Article, '_id'>>(values, ['content', 'category'])) {
         const res = await articlesApi.post(values);
         alert(
-          res.status === 201
+          typeof res !== 'string'
             ? locale.articleAddedSuccessfully
             : locale.serverError
         );
@@ -242,15 +247,17 @@ const EditorPage = () => {
 
   return (
     <Grid container justify="center" alignItems="center">
-      <AppBar position="relative" className={classes.appBar}>
-        <Typography variant="h1" align="center" color="textSecondary">
-          {selectedLanguage === 'he' && '!'}Sheilta`S
-          {selectedLanguage !== 'he' && '!'}
-        </Typography>
-      </AppBar>
+      <Header />
       <Box className={classes.paper} component={Paper} width="100%" mx={2}>
-        <Grid container component={Typography}>
-          {locale.editorPageTitle}:
+        <Grid container alignItems="center" justify="space-between">
+          <Typography> {locale.editorPageTitle}:</Typography>
+          <Button
+            variant="contained"
+            onClick={goToContentsPage}
+            color="secondary"
+          >
+            <Typography>{locale.toContentsPage}</Typography>
+          </Button>
         </Grid>
         <Formik
           validate={validate}

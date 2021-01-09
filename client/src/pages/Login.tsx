@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { useClientProvider } from '../providers/ClientProvider';
+import Header from '../components/Header';
 
 const createClasses = makeStyles((theme) => ({
   container: {
@@ -53,6 +54,7 @@ const LoginPage = () => {
       item
       xs
     >
+      <Header />
       <Paper elevation={3} className={classes.formContainer}>
         <Grid
           container

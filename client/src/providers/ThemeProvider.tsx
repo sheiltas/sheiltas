@@ -7,11 +7,11 @@ import {
 import { create } from 'jss';
 import rtl from 'jss-rtl';
 import { StylesProvider, jssPreset } from '@material-ui/core/styles';
+import responsiveFontSizes from '@material-ui/core/styles/responsiveFontSizes';
+import createPalette from '@material-ui/core/styles/createPalette';
 
 import { ChildrenProps } from '../types';
 import { useClientProvider } from './ClientProvider';
-import responsiveFontSizes from '@material-ui/core/styles/responsiveFontSizes';
-import createPalette from '@material-ui/core/styles/createPalette';
 
 // Configure JSS
 const jss = create({ plugins: [...jssPreset().plugins, rtl()] });
@@ -72,24 +72,27 @@ const ThemeProvider = (props: ChildrenProps) => {
           palette,
           overrides: {
             MuiInputBase: {
-              root: { backgroundColor: palette.background.default }
+              root: {
+                backgroundColor: palette.background.default
+              }
+            },
+            MuiFormLabel: {
+              root: {
+                zIndex: 1 // Giving MuiInputBase BG hides the label
+              }
             },
             // @ts-ignore
             MuiOutlinedInput: {
               root: {
-                '&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                  // border: `1px solid ${palette.info.main}`
-                }
+                // '&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                // border: `1px solid ${palette.info.main}`
+                // }
               }
             },
             MuiButton: {
               root: {
                 textTransform: 'capitalize',
-                color: palette.background.default,
-                // backgroundColor: palette.secondary.main,
-                '&:hover': {
-                  // backgroundColor: palette.secondary.dark
-                }
+                color: palette.background.default
               }
             }
           },
