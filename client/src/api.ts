@@ -1,6 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { loginObj, routes } from './types';
-import { Article } from './types';
+import { Article, Locale, loginObj, methods, routes } from './types';
 
 const baseURL =
   process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:4000/api';
@@ -19,9 +18,7 @@ const authApi = {
       localStorage.setItem('token', token);
       axiosInstance.defaults.headers.authorization = token;
       return token;
-      // return true;
     } catch (e) {
-      // console.log('e', e);
       return false;
     }
   },
@@ -46,12 +43,27 @@ const addToken = (axiosInstance: AxiosInstance) => {
   throw Error('No token');
 };
 
-function createApi<T>(apiName: routes) {
+function createApi<T>(
+  apiName: routes,
+  options: {
+    publicApi: Partial<Record<methods, boolean>>;
+  } = {
+    publicApi: {
+      get: false,
+      delete: false,
+      post: false,
+      put: false
+    }
+  }
+) {
+  const { publicApi } = options;
   return {
     name: apiName,
     get: async (params: unknown): Promise<T[]> => {
       try {
-        addToken(axiosInstance);
+        if (!publicApi.get) {
+          addToken(axiosInstance);
+        }
         return (await axiosInstance.get(`/${apiName}`, { params })).data;
       } catch (e) {
         return e;
@@ -59,7 +71,9 @@ function createApi<T>(apiName: routes) {
     },
     post: async (body: Omit<T, '_id'>): Promise<T | string> => {
       try {
-        addToken(axiosInstance);
+        if (!publicApi.post) {
+          addToken(axiosInstance);
+        }
         return await axiosInstance.post(`${apiName}`, body);
       } catch (e) {
         return e;
@@ -70,4 +84,10 @@ function createApi<T>(apiName: routes) {
 
 const articlesApi = createApi<Article>(routes.ARTICLES);
 
-export { authApi, articlesApi };
+const localesApi = createApi<Locale>(routes.LOCALES, {
+  publicApi: {
+    get: true
+  }
+});
+
+export { authApi, articlesApi, localesApi };

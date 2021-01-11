@@ -7,6 +7,7 @@ import UserModel, { UserDocument } from './models/users';
 import { createToken, verifyToken } from './utils/auth';
 import { authData as authDataType, loginObj, routes } from '../../client/src/types';
 import { Request, Response } from 'express';
+import LocaleModel, { LocaleDocument } from './models/locals';
 
 const router = express.Router();
 
@@ -56,8 +57,6 @@ const articlesRoutes = createRoutes<ArticleDocument>(routes.ARTICLES, ArticleMod
             try {
                 res.send(await ArticleModel.find({ ...req.body }).populate('author', 'fullName'));
             } catch (e) {
-                //
-                console.log('herro', e);
                 handleError(res, e);
             }
         }
@@ -82,8 +81,12 @@ const articlesRoutes = createRoutes<ArticleDocument>(routes.ARTICLES, ArticleMod
 //     }
 // });
 
+const localesRoutes = createRoutes<LocaleDocument>(routes.LOCALES, LocaleModel, {
+    exclude: ['delete', 'post', 'put']
+});
+
 const usersRoutes = createRoutes<UserDocument>(routes.USERS, UserModel, {
     exclude: ['delete', 'put']
 });
 
-export default [usersRoutes, sheiltaRoutes, articlesRoutes, router];
+export default [usersRoutes, sheiltaRoutes, articlesRoutes, router, localesRoutes];

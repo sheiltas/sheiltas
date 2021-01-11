@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { categoriesKeysArray } from './utils';
+import { categoriesKeysArray, languages as languagesArray } from './utils';
 
 // Models
 export interface User extends SchemaTimestampsConfig {
@@ -16,6 +16,12 @@ export interface Article extends SchemaTimestampsConfig {
   category: categoriesKeys;
   subcategory: subcategoriesHebrew;
   title: string;
+}
+
+export interface Locale {
+  _id: string;
+  key: string;
+  translation: Record<languages, string>;
 }
 
 // Type guards
@@ -233,7 +239,7 @@ export type subcategoriesHebrew =
   | mourningSubcategories;
 
 // enums
-export type locales = 'he' | 'en';
+export type languages = typeof languagesArray[number];
 
 export type methods = 'post' | 'get' | 'delete' | 'put';
 
@@ -243,7 +249,8 @@ export enum routes {
   LOGIN = 'login',
   KEEP_ALIVE = 'keep-alive',
   SIGNUP = 'signup',
-  USERS = 'users'
+  USERS = 'users',
+  LOCALES = 'locales'
 }
 
 interface SchemaTimestampsConfig {

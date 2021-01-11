@@ -176,6 +176,8 @@ export const mapCategoriesKeysToHebrewSubcategories: Record<
   customs: []
 };
 
+export const languages = ['he', 'en'] as const;
+
 export const decodeJwt = (token: string) => {
   try {
     return JSON.parse(atob(token.split('.')[1]));

@@ -39,6 +39,19 @@ export const tryCatchHandler = async (
     }
 };
 
+/**
+ *
+ * @param routeName
+ * The url of the route
+ * @param model
+ * A mongoose model
+ * @param options.middleware
+ * Single or array of middlewares to happen before the main operation
+ * @param options.exclude
+ * Array of REST methods
+ * @param options.overrides
+ * REST keys - RequestHandler functions to override the base methods (Good for population)
+ */
 const createRoutes = function <T extends Document>(
     routeName: string,
     model: Model<T>,
