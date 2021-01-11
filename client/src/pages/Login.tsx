@@ -107,7 +107,7 @@ const LoginPage = () => {
                       <Button
                         type="submit"
                         variant="contained"
-                        color="secondary"
+                        color="primary"
                         className={classes.button}
                       >
                         {locale.login}

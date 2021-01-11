@@ -1,6 +1,6 @@
 import { categoriesKeys, subcategoriesHebrew } from './types';
 
-export const categoriesKeysArray = [
+export const baseCategoriesKeysArray = [
   'aroundTheYear',
   'destructionToSalvation',
   'prayersAndBlessings',

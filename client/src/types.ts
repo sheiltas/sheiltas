@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
-import { categoriesKeysArray, languages as languagesArray } from './utils';
+import { baseCategoriesKeysArray, languages as languagesArray } from './utils';
 
-// Models
+// Models - all _id's are mongoose.ObjectId in the server
 export interface User extends SchemaTimestampsConfig {
   _id: string;
   username: string;
@@ -24,6 +24,17 @@ export interface Locale {
   translation: Record<languages, string>;
 }
 
+export interface Category {
+  _id: string;
+  name: Locale | string;
+  subcategories: Array<Subcategory | string>;
+}
+
+export interface Subcategory {
+  _id: string;
+  name: Locale | string;
+}
+
 // Type guards
 export function isType<T>(obj: T | any, keys: string | string[]): obj is T {
   if (!obj) {
@@ -40,7 +51,7 @@ export function isType<T>(obj: T | any, keys: string | string[]): obj is T {
 }
 
 // Sheilta categories
-export type categoriesKeys = typeof categoriesKeysArray[number];
+export type categoriesKeys = typeof baseCategoriesKeysArray[number];
 
 // Sheilta Subcategories
 export type aroundTheYearSubcategories =

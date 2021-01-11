@@ -4,7 +4,6 @@ import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import AppBar from '@material-ui/core/AppBar';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import MuiSelect from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -20,7 +19,7 @@ import { articlesApi } from '../api';
 import { useClientContext } from '../providers/ClientProvider';
 import { categoriesKeys, isType, subcategoriesHebrew } from '../types';
 import {
-  categoriesKeysArray,
+  baseCategoriesKeysArray,
   mapCategoriesKeysToHebrewSubcategories
 } from '../utils';
 import { Article } from '../types';
@@ -34,7 +33,6 @@ const createClasses = makeStyles((theme) => ({
     marginBottom: '30px'
   },
   paper: {
-    backgroundColor: '#ccbb9e !important',
     padding: '30px'
   },
   input: {
@@ -134,7 +132,7 @@ const FormikForm = () => {
       {
         label: locale.category,
         name: 'category' as selectValues,
-        options: categoriesKeysArray.map(mapKeyToOption())
+        options: baseCategoriesKeysArray.map(mapKeyToOption())
       },
       {
         label: locale.subcategory,
@@ -243,7 +241,6 @@ const EditorPage = () => {
     },
     [locale.articleAddedSuccessfully, locale.serverError]
   );
-
   return (
     <Grid container justify="center" alignItems="center">
       <Header />
@@ -253,7 +250,7 @@ const EditorPage = () => {
           <Button
             variant="contained"
             onClick={goToContentsPage}
-            color="secondary"
+            color="primary"
           >
             <Typography>{locale.toContentsPage}</Typography>
           </Button>

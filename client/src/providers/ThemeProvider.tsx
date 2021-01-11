@@ -3,7 +3,6 @@ import {
   unstable_createMuiStrictModeTheme as createMuiTheme,
   ThemeProvider as MuiThemeProvider
 } from '@material-ui/core/styles';
-
 import { create } from 'jss';
 import rtl from 'jss-rtl';
 import { StylesProvider, jssPreset } from '@material-ui/core/styles';
@@ -16,45 +15,24 @@ import { useClientContext } from './ClientProvider';
 // Configure JSS
 const jss = create({ plugins: [...jssPreset().plugins, rtl()] });
 
-// declare module '@material-ui/core/styles/createPalette' {
-//   interface Palette {
-//     neutral: Palette['primary'];
-//   }
-//   interface PaletteOptions {
-//     neutral: PaletteOptions['primary'];
-//   }
-// }
-
 const palette = createPalette({
   background: {
     default: '#fff8ed',
     paper: '#ffedcf'
   },
-  // info: {
-  //   main: '#000000'
-  // },
   primary: {
-    //   main: '#ffedcf',
-    //   light: '#fff9ef',
-    //   dark: '#ccbb9e'
-    // },
-    main: 'rgba(0, 0, 0, 0.54)',
-    light: '#fff9ef',
-    dark: '#ccbb9e'
+    main: '#b49a6f',
+    light: '#cebda1',
+    dark: '#a28453'
   },
   secondary: {
     main: '#1f3c64',
     light: '#4e6692',
     dark: '#001739'
+  },
+  text: {
+    primary: '#061324'
   }
-  // text: {
-  //   primary: '#000000',
-  //   secondary: '#ffffff'
-  // }
-
-  // info: {
-  //   main: 'rgba(0, 0, 0, 0.54)'
-  // }
 });
 
 const ThemeProvider = (props: ChildrenProps) => {
@@ -74,17 +52,6 @@ const ThemeProvider = (props: ChildrenProps) => {
             MuiInputBase: {
               root: {
                 backgroundColor: palette.background.default
-              }
-            },
-            MuiFormLabel: {
-              root: {}
-            },
-            // @ts-ignore
-            MuiOutlinedInput: {
-              root: {
-                // '&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                // border: `1px solid ${palette.info.main}`
-                // }
               }
             },
             MuiButton: {

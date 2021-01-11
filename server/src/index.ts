@@ -55,7 +55,7 @@ app.listen(port, async () => {
         await mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true });
         console.log('Connected to DB', isProduction ? '' : dbUrl);
 
-        // initLocales();
+        initLocales();
 
         // initSheiltas();
     } catch (e) {
