@@ -27,7 +27,7 @@ const userSchemaObj: Record<keyof Omit<User, '_id' | keyof SchemaTimestampsConfi
     }
 };
 
-const UserSchema: Schema = new Schema(userSchemaObj);
+const UserSchema: Schema = new Schema(userSchemaObj, { timestamps: true });
 
 UserSchema.method('toJSON', function (this: UserDocument) {
     const user = this.toObject();

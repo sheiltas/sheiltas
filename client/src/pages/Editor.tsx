@@ -17,7 +17,7 @@ import useTheme from '@material-ui/core/styles/useTheme';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import { articlesApi } from '../api';
-import { useClientProvider } from '../providers/ClientProvider';
+import { useClientContext } from '../providers/ClientProvider';
 import { categoriesKeys, isType, subcategoriesHebrew } from '../types';
 import {
   categoriesKeysArray,
@@ -43,7 +43,7 @@ const createClasses = makeStyles((theme) => ({
 }));
 
 const useMapKeyToOption = () => {
-  const { locale } = useClientProvider();
+  const { locale } = useClientContext();
 
   return (withLocale = true) => (key: string) => ({
     value: key,
@@ -122,7 +122,7 @@ const FormikForm = () => {
     errors,
     touched
   } = useFormikContext<FormikValues>();
-  const { locale } = useClientProvider();
+  const { locale } = useClientContext();
   const classes = createClasses();
 
   const { category } = values;
@@ -165,7 +165,6 @@ const FormikForm = () => {
             fullWidth
             helperText={touched.title && errors.title}
             error={errors.title && touched.title}
-            color={'textPrimary'}
             InputProps={{
               className: classes.input
             }}
@@ -203,7 +202,7 @@ const FormikForm = () => {
 
 const EditorPage = () => {
   const classes = createClasses();
-  const { locale } = useClientProvider();
+  const { locale } = useClientContext();
   const history = useHistory();
 
   const initialValues: FormikValues = useMemo(

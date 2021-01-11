@@ -7,8 +7,10 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import Box from '@material-ui/core/Box';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import { useClientProvider } from '../providers/ClientProvider';
+
+import { useClientContext } from '../providers/ClientProvider';
 import Header from '../components/Header';
 
 const createClasses = makeStyles((theme) => ({
@@ -19,10 +21,14 @@ const createClasses = makeStyles((theme) => ({
     minWidth: '300px',
     minHeight: '200px'
   },
+  form: {
+    padding: '30px',
+    gridGap: theme.spacing(2)
+  },
   button: {
     borderRadius: '30px',
     width: '100%',
-    top: '50px'
+    top: '12px'
   }
 }));
 
@@ -30,7 +36,7 @@ const LoginPage = () => {
   const classes = createClasses();
   const history = useHistory();
   const [error, toggleError] = useState(false);
-  const { locale, login } = useClientProvider();
+  const { locale, login } = useClientContext();
 
   const onSubmit = useCallback(
     async (values) => {
@@ -75,35 +81,40 @@ const LoginPage = () => {
             {(formikProps) => {
               const { handleChange } = formikProps;
               return (
-                <Form>
-                  <Grid container direction="column">
-                    <Field
-                      onChange={handleChange}
-                      name="username"
-                      as={TextField}
-                      label={locale.username}
-                    />
-                    <Field
-                      onChange={handleChange}
-                      name="password"
-                      as={TextField}
-                      label={locale.password}
-                      type="password"
-                    />
-                    <Grid container justify="center">
-                      <Grid item xs={7}>
-                        <Button
-                          type="submit"
-                          variant="contained"
-                          color="secondary"
-                          className={classes.button}
-                        >
-                          {locale.login}
-                        </Button>
-                      </Grid>
+                <Grid
+                  component={Form}
+                  container
+                  direction="column"
+                  className={classes.form}
+                >
+                  <Field
+                    onChange={handleChange}
+                    name="username"
+                    as={TextField}
+                    label={locale.username}
+                    variant="outlined"
+                  />
+                  <Field
+                    onChange={handleChange}
+                    name="password"
+                    as={TextField}
+                    label={locale.password}
+                    type="password"
+                    variant="outlined"
+                  />
+                  <Grid container justify="center">
+                    <Grid component={Box} position="absolute" item xs={7}>
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        color="secondary"
+                        className={classes.button}
+                      >
+                        {locale.login}
+                      </Button>
                     </Grid>
                   </Grid>
-                </Form>
+                </Grid>
               );
             }}
           </Formik>

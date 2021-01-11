@@ -15,6 +15,7 @@ export interface Article extends SchemaTimestampsConfig {
   content: string;
   category: categoriesKeys;
   subcategory: subcategoriesHebrew;
+  title: string;
 }
 
 // Type guards

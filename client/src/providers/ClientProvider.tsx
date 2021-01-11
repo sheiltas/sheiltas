@@ -79,4 +79,4 @@ const ClientProvider = (props: ChildrenProps) => {
 
 export default memo(ClientProvider);
 
-export const useClientProvider = () => useContext(Context);
+export const useClientContext = () => useContext(Context);

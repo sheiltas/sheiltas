@@ -14,9 +14,10 @@ const createBearerHeader = (authData: authDataType) => `Bearer ${createToken(aut
 
 router.post(`/${routes.LOGIN}`, async (req, res) => {
     const { username, password: reqPassword } = req.body as loginObj;
+    console.log('username', username);
     try {
         const user = await UserModel.findOne({ username });
-        const { password: hashedPassword, fullName, _id } = user;
+        const { password: hashedPassword, fullName, _id } = user || {};
         return (await bcrypt.compare(reqPassword, hashedPassword))
             ? res.send(createToken({ fullName, username, _id }))
             : res.sendStatus(401);
@@ -53,7 +54,7 @@ const articlesRoutes = createRoutes<ArticleDocument>(routes.ARTICLES, ArticleMod
     overrides: {
         get: async (req, res) => {
             try {
-                res.send(await ArticleModel.find({ ...req.body }).populate('author', 'username'));
+                res.send(await ArticleModel.find({ ...req.body }).populate('author', 'fullName'));
             } catch (e) {
                 //
                 console.log('herro', e);

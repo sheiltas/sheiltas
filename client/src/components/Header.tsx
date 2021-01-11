@@ -4,7 +4,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Grid from '@material-ui/core/Grid';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Box from '@material-ui/core/Box';
-import { useClientProvider } from '../providers/ClientProvider';
+import { useClientContext } from '../providers/ClientProvider';
 
 const createClasses = makeStyles((theme) => ({
   appBar: {
@@ -17,7 +17,7 @@ const createClasses = makeStyles((theme) => ({
 
 const Header = () => {
   const classes = createClasses();
-  const { selectedLanguage } = useClientProvider();
+  const { selectedLanguage } = useClientContext();
 
   return (
     <>

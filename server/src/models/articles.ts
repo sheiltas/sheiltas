@@ -1,15 +1,6 @@
-import { Document, model, Schema, SchemaTypeOpts, SchemaTimestampsConfig, ObjectId } from 'mongoose';
-import { categoriesKeys, subcategoriesHebrew } from '../../../client/src/types';
-import UserModel, { User } from './users';
-
-export interface Article extends SchemaTimestampsConfig {
-    _id: ObjectId | string;
-    author: ObjectId | User;
-    content: string;
-    category: categoriesKeys;
-    subcategory: subcategoriesHebrew;
-    title: string;
-}
+import { Document, model, Schema, SchemaTypeOpts, SchemaTimestampsConfig } from 'mongoose';
+import UserModel from './users';
+import { Article } from '../../../client/src/types';
 
 export type ArticleDocument = Article & Document;
 
@@ -38,7 +29,7 @@ const articleSchemaObj: Record<
     }
 };
 
-const ArticleSchema: Schema = new Schema(articleSchemaObj);
+const ArticleSchema: Schema = new Schema(articleSchemaObj, { timestamps: true });
 
 const ArticleModel = model<ArticleDocument>('articles', ArticleSchema);
 

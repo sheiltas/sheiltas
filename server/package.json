@@ -51,7 +51,7 @@
             "arrowFunctions": false
         },
         "rules": {
-            "no-ternary": "warn"
+            "no-ternary": "error"
         }
     },
     "nodemonConfig": {

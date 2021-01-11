@@ -11,7 +11,7 @@ import responsiveFontSizes from '@material-ui/core/styles/responsiveFontSizes';
 import createPalette from '@material-ui/core/styles/createPalette';
 
 import { ChildrenProps } from '../types';
-import { useClientProvider } from './ClientProvider';
+import { useClientContext } from './ClientProvider';
 
 // Configure JSS
 const jss = create({ plugins: [...jssPreset().plugins, rtl()] });
@@ -59,7 +59,7 @@ const palette = createPalette({
 
 const ThemeProvider = (props: ChildrenProps) => {
   const { children } = props;
-  const { selectedLanguage } = useClientProvider();
+  const { selectedLanguage } = useClientContext();
 
   const direction = useMemo(() => (selectedLanguage === 'he' ? 'rtl' : 'ltr'), [
     selectedLanguage
@@ -77,9 +77,7 @@ const ThemeProvider = (props: ChildrenProps) => {
               }
             },
             MuiFormLabel: {
-              root: {
-                zIndex: 1 // Giving MuiInputBase BG hides the label
-              }
+              root: {}
             },
             // @ts-ignore
             MuiOutlinedInput: {
