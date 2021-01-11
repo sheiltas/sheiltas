@@ -16,6 +16,7 @@ const ContentsPage = () => {
   return (
     <Grid>
       <Header />
+
       {contents?.length &&
         contents.map((content) => {
           const {
@@ -26,12 +27,17 @@ const ContentsPage = () => {
             subcategory,
             updatedAt
           } = content;
+
           const { fullName } = isType<User>(author, 'fullName')
             ? author
             : ({} as any);
+
           return (
             <Grid key={title}>
-              <Typography variant="h2">{title}</Typography>
+              <Grid container alignItems="baseline">
+                <Typography variant="h2">{title}</Typography>
+                <Typography variant="subtitle1"> / {updatedAt}</Typography>
+              </Grid>
               <Typography variant="subtitle1">{`${locale.category}: ${locale[category]}`}</Typography>
               {subcategory && (
                 <Typography variant="subtitle1">

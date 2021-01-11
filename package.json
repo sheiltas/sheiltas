@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "start": "cd server && npm start"
+    "start": "yarn --cwd server run start",
+    "build": "yarn --cwd client run build && yarn --cwd server run build"
   },
   "devDependencies": {}
 }

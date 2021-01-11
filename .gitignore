@@ -247,5 +247,6 @@ fabric.properties
 
 # End of https://www.toptal.com/developers/gitignore/api/webstorm,node,macos
 
-
-app.yaml
+server/app.yaml
+server/app-dev.yaml
+resources
