@@ -8,7 +8,7 @@ import * as compression from 'compression';
 import * as cors from 'cors';
 
 import routes from './routes/index';
-import { initDB, initSheiltas } from './utils/initDB';
+import { initDB } from './utils/initDB';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
