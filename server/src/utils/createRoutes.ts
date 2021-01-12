@@ -46,6 +46,8 @@ export const tryCatchHandler = async (
  * The url of the route
  * @param model
  * A mongoose model
+ * @param options
+ * options to change the default routes created
  * @param options.middleware
  * Single or array of middlewares to happen before the main operation
  * @param options.exclude
