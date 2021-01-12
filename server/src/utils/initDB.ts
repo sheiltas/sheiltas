@@ -1,11 +1,15 @@
-// Init locales
 import { readFile } from 'fs';
 import { join } from 'path';
-import { baseCategoriesKeysArray, languages } from '../../../client/src/utils';
-import { categoriesKeys, Category, Locale } from '../../../client/src/types';
+import {
+    baseCategoriesKeysArray,
+    languages,
+    mapCategoriesKeysToHebrewSubcategories
+} from '../../../client/src/utils';
+import { categoriesKeys, Category, Locale, subcategoriesHebrew } from '../../../client/src/types';
 import LocaleModel from '../models/locals';
 import SheiltaModel from '../models/sheilta';
 import CategoryModel from '../models/category';
+import SubcategoryModel from '../models/subcategory';
 
 export const initLocales = () =>
     readFile(
@@ -16,39 +20,61 @@ export const initLocales = () =>
                 return console.error('err', err);
             }
             const localesData = JSON.parse(data);
-            const formattedData = Object.keys(localesData.en).map((key) => ({
-                key,
-                translation: languages.reduce((acc, language) => {
-                    acc[language] = localesData[language][key];
-                    return acc;
-                }, {} as Locale['translation'])
-            }));
+            const locales = Object.keys(localesData.en).map(
+                (key) =>
+                    new LocaleModel({
+                        key,
+                        translation: languages.reduce((acc, language) => {
+                            acc[language] = localesData[language][key];
+                            return acc;
+                        }, {} as Locale['translation'])
+                    })
+            );
 
-            // @ts-ignore
-            const localesRes = await LocaleModel.insertMany(formattedData);
-
-            console.log('Initiated locales successfully');
-            const categories = localesRes.reduce((acc, locale) => {
-                const { key, _id: localeId } = locale;
-                return baseCategoriesKeysArray.includes(key as categoriesKeys)
+            const subcategories = locales.reduce((acc, locale) => {
+                const { _id: localeId, translation } = locale;
+                const hebrewName = Object.values(mapCategoriesKeysToHebrewSubcategories).find((value) =>
+                    value.includes(translation.he as subcategoriesHebrew)
+                );
+                return hebrewName
                     ? acc.concat(
-                          new CategoryModel({
+                          new SubcategoryModel({
                               name: localeId,
                               subcategories: []
                           })
                       )
                     : acc;
+            }, []);
+
+            const categories = locales.reduce((acc, locale) => {
+                const { key, _id: localeId } = locale;
+                const isCategory = baseCategoriesKeysArray.includes(key as categoriesKeys);
+                return isCategory
+                    ? acc.concat(
+                          new CategoryModel({
+                              name: localeId,
+                              subcategories: mapCategoriesKeysToHebrewSubcategories[
+                                  key as categoriesKeys
+                              ].map((heSubcategory) =>
+                                  locales.find(
+                                      (singleLocale) => singleLocale.translation.he === heSubcategory
+                                  )
+                              )
+                          })
+                      )
+                    : acc;
             }, [] as Category[]);
 
-            await Promise.all([
-                // @ts-ignore _id will be created in mongo
-                LocaleModel.insertMany(formattedData),
-                CategoryModel.insertMany(categories).then(async (categoriesRes) => {
-                    await 
-                })
-            ]);
-
-            console.log('Initiated categories successfully');
+            try {
+                await Promise.all([
+                    LocaleModel.insertMany(locales),
+                    CategoryModel.insertMany(categories),
+                    SubcategoryModel.insertMany(subcategories)
+                ]);
+                console.log('Initiated DB successfully');
+            } catch (e) {
+                console.log('Error in init DB:', e);
+            }
         }
     );
 
