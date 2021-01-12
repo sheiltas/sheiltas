@@ -13,7 +13,8 @@ export type UserDocument = User & Document;
 const userSchemaObj: Record<keyof Omit<User, '_id' | keyof SchemaTimestampsConfig>, SchemaTypeOpts<any>> = {
     username: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     password: {
         type: String,

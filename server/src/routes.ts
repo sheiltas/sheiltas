@@ -15,7 +15,6 @@ const createBearerHeader = (authData: authDataType) => `Bearer ${createToken(aut
 
 router.post(`/${routes.LOGIN}`, async (req, res) => {
     const { username, password: reqPassword } = req.body as loginObj;
-    console.log('username', username);
     try {
         const user = await UserModel.findOne({ username });
         const { password: hashedPassword, fullName, _id } = user || {};
@@ -23,7 +22,6 @@ router.post(`/${routes.LOGIN}`, async (req, res) => {
             ? res.send(createToken({ fullName, username, _id }))
             : res.sendStatus(401);
     } catch (e) {
-        console.log('Error:', e);
         handleError(res, e);
     }
 });
@@ -55,31 +53,17 @@ const articlesRoutes = createRoutes<ArticleDocument>(routes.ARTICLES, ArticleMod
     overrides: {
         get: async (req, res) => {
             try {
-                res.send(await ArticleModel.find({ ...req.body }).populate('author', 'fullName'));
+                res.send(
+                    await ArticleModel.find({ ...req.body }).populate([
+                        { path: 'author', select: 'fullName' }
+                    ])
+                );
             } catch (e) {
                 handleError(res, e);
             }
         }
     }
 });
-// articlesRoutes.prototype.post =
-//     (routes.ARTICLES,
-//     verifyToken,
-//     async (req: Request, res: Response) => {
-//         try {
-//             handleSuccess(res, await ArticleModel.create({ ...req.body, author: res.locals.authData._id }));
-//         } catch (e) {
-//             handleError(res, e);
-//         }
-//     });
-// articlesRoutes.get(routes.ARTICLES, async (req, res) => {
-//     try {
-//         console.log('res.locals.authData', res.locals.authData);
-//         handleSuccess(res, await ArticleModel.find(req.body).populate('author', 'fullName').lean());
-//     } catch (e) {
-//         handleError(res, e);
-//     }
-// });
 
 const localesRoutes = createRoutes<LocaleDocument>(routes.LOCALES, LocaleModel, {
     exclude: ['delete', 'post', 'put']

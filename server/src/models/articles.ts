@@ -1,6 +1,8 @@
 import { Document, model, Schema, SchemaTypeOpts, SchemaTimestampsConfig } from 'mongoose';
 import UserModel from './users';
 import { Article } from '../../../client/src/types';
+import CategoryModel from './category';
+import SubcategoryModel from './subcategory';
 
 export type ArticleDocument = Article & Document;
 
@@ -22,10 +24,11 @@ const articleSchemaObj: Record<
         type: String,
         required: true
     },
-    category: { type: String, required: true },
+    category: { type: Schema.Types.ObjectId, ref: CategoryModel, required: true },
     subcategory: {
-        type: String
-        // required: true
+        type: Schema.Types.ObjectId,
+        ref: SubcategoryModel
+        // required: true - should be true when all categories will have subcategories
     }
 };
 

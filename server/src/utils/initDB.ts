@@ -10,8 +10,15 @@ import LocaleModel from '../models/locals';
 import SheiltaModel from '../models/sheilta';
 import CategoryModel from '../models/category';
 import SubcategoryModel from '../models/subcategory';
+import UserModel from '../models/users';
 
-export const initLocales = () =>
+export const initDB = async () => {
+    const adminExists = await UserModel.findOne({ username: 'admin' });
+    if (adminExists) {
+        console.log('DB already exists');
+        return;
+    }
+
     readFile(
         join(__dirname, '../../../resources/localesData.json'),
         { encoding: 'utf-8' },
@@ -69,7 +76,8 @@ export const initLocales = () =>
                 await Promise.all([
                     LocaleModel.insertMany(locales),
                     CategoryModel.insertMany(categories),
-                    SubcategoryModel.insertMany(subcategories)
+                    SubcategoryModel.insertMany(subcategories),
+                    UserModel.create({ fullName: 'Full name', password: '0000', username: 'admin' })
                 ]);
                 console.log('Initiated DB successfully');
             } catch (e) {
@@ -77,6 +85,7 @@ export const initLocales = () =>
             }
         }
     );
+};
 
 export const initSheiltas = () =>
     readFile(join(__dirname, '../../resources/initSheiltas.json'), { encoding: 'utf-8' }, (err, data) => {

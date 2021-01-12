@@ -8,7 +8,7 @@ import * as compression from 'compression';
 import * as cors from 'cors';
 
 import routes from './routes';
-import { initLocales, initSheiltas } from './utils/initDB';
+import { initDB, initSheiltas } from './utils/initDB';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -55,7 +55,7 @@ app.listen(port, async () => {
         await mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true });
         console.log('Connected to DB', isProduction ? '' : dbUrl);
 
-        initLocales();
+        initDB();
 
         // initSheiltas();
     } catch (e) {

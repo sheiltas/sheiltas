@@ -8,6 +8,7 @@ type apiFunction = (req: Request, res: Response) => Promise<void>;
 type handleErrorFunction = (res: Response, error: Error, options?: { status: number }) => void;
 
 export const handleError: handleErrorFunction = (res, error, options = { status: 500 }) => {
+    console.error('Error: ', Error);
     const { status } = options;
     res.status(status).send(error);
 };
