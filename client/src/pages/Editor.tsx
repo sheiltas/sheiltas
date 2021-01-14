@@ -1,5 +1,4 @@
 import React, { useCallback, memo, useMemo } from 'react';
-import { Formik, Form, Field, useFormikContext } from 'formik';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -15,13 +14,14 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import useTheme from '@material-ui/core/styles/useTheme';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
+import { Formik, Form, Field, useFormikContext } from 'formik';
+import { Link } from 'react-router-dom';
+import { useQuery } from 'react-query';
+
 import { articlesApi, categoriesApi } from '../api';
 import { useClientContext } from '../providers/ClientProvider';
-import { isType, subcategoriesHebrew } from '../types';
-import { Article } from '../types';
+import { isType, Article } from '../types';
 import Header from '../components/Header';
-import { useHistory } from 'react-router';
-import { useQuery } from 'react-query';
 
 const createClasses = makeStyles((theme) => ({
   appBar: {
@@ -62,7 +62,7 @@ interface SelectProps<T = string> {
 interface FormikValues {
   title: string;
   category: string;
-  subcategory: subcategoriesHebrew | '';
+  subcategory: string;
   content: string;
 }
 
@@ -210,7 +210,6 @@ const FormikForm = () => {
 const EditorPage = () => {
   const classes = createClasses();
   const { locale } = useClientContext();
-  const history = useHistory();
 
   const initialValues: FormikValues = useMemo(
     () => ({
@@ -221,10 +220,6 @@ const EditorPage = () => {
     }),
     []
   );
-
-  const goToContentsPage = useCallback(() => {
-    history.push('/contents');
-  }, [history]);
 
   const validate = useCallback(
     (values: FormikValues) =>
@@ -256,12 +251,10 @@ const EditorPage = () => {
       <Box className={classes.paper} component={Paper} width="100%" mx={2}>
         <Grid container alignItems="center" justify="space-between">
           <Typography> {locale.editorPageTitle}:</Typography>
-          <Button
-            variant="contained"
-            onClick={goToContentsPage}
-            color="primary"
-          >
-            <Typography>{locale.toContentsPage}</Typography>
+          <Button variant="contained" color="primary">
+            <Link to="/contents">
+              <Typography>{locale.toContentsPage}</Typography>
+            </Link>
           </Button>
         </Grid>
         <Formik

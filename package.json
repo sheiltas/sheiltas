@@ -1,7 +1,9 @@
 {
   "scripts": {
     "start": "yarn --cwd server run start",
-    "build": "yarn --cwd client run build && yarn --cwd server run build"
+    "build": "yarn --cwd client run build && yarn --cwd server run build",
+    "deploy": "yarn --cwd server run deploy",
+    "deploy:dev": "yarn --cwd server run deploy:dev"
   },
   "devDependencies": {}
 }

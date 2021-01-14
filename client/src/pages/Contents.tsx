@@ -17,7 +17,7 @@ const ContentsPage = () => {
     <Grid>
       <Header />
 
-      {contents?.length &&
+      {!!contents?.length &&
         contents.map((content) => {
           const {
             author,

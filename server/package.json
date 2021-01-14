@@ -10,6 +10,7 @@
         "start:dev": "node --inspect=5858 -r ts-node/register -r dotenv/config ./src/index.ts",
         "start:watch": "nodemon",
         "build": "tsc --outDir dist",
+        "deploy": "gcloud app deploy",
         "deploy:dev": "gcloud app deploy --project=sheiltas-dev app-dev.yaml"
     },
     "dependencies": {
