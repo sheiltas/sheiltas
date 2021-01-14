@@ -13,8 +13,8 @@ export interface Article extends SchemaTimestampsConfig {
   _id: string;
   author: User | string;
   content: string;
-  category: categoriesKeys;
-  subcategory: subcategoriesHebrew;
+  category: Category | string;
+  subcategory: Subcategory | string;
   title: string;
 }
 
@@ -35,6 +35,27 @@ export interface Subcategory {
   name: Locale | string;
 }
 
+// Client models
+export interface ClientSubcategory {
+  _id: string;
+  name: Record<'_id' | 'key', string>;
+}
+
+export interface ClientCategory {
+  _id: string;
+  name: Record<'_id' | 'key', string>;
+  subcategories: Array<ClientSubcategory>;
+}
+
+export interface ClientArticle extends SchemaTimestampsConfig {
+  _id: string;
+  author: User['fullName'];
+  content: string;
+  category: ClientCategory;
+  subcategory: ClientSubcategory;
+  title: string;
+}
+
 // Type guards
 export function isType<T>(obj: T | any, keys: string | string[]): obj is T {
   if (!obj) {
@@ -43,8 +64,8 @@ export function isType<T>(obj: T | any, keys: string | string[]): obj is T {
 
   if (Array.isArray(obj)) {
     return Array.isArray(keys)
-      ? obj.every((arrItem: T | any) => keys.every((key) => arrItem[key]))
-      : obj.every((arrItem: T | any) => arrItem[keys]);
+      ? obj.every((arrayItem: T | any) => keys.every((key) => arrayItem[key]))
+      : obj.every((arrayItem: T | any) => arrayItem[keys]);
   }
 
   return Array.isArray(keys) ? keys.every((key) => obj[key]) : obj[keys];
@@ -261,12 +282,14 @@ export enum routes {
   KEEP_ALIVE = 'keep-alive',
   SIGNUP = 'signup',
   USERS = 'users',
-  LOCALES = 'locales'
+  LOCALES = 'locales',
+  CATEGORIES = 'categories',
+  SUBCATEGORIES = 'subcategories'
 }
 
 interface SchemaTimestampsConfig {
-  createdAt?: boolean | string;
-  updatedAt?: boolean | string;
+  createdAt: boolean | string;
+  updatedAt: boolean | string;
   currentTime?: () => Date | number;
 }
 

@@ -15,16 +15,13 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import useTheme from '@material-ui/core/styles/useTheme';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
-import { articlesApi } from '../api';
+import { articlesApi, categoriesApi } from '../api';
 import { useClientContext } from '../providers/ClientProvider';
-import { categoriesKeys, isType, subcategoriesHebrew } from '../types';
-import {
-  baseCategoriesKeysArray,
-  mapCategoriesKeysToHebrewSubcategories
-} from '../utils';
+import { isType, subcategoriesHebrew } from '../types';
 import { Article } from '../types';
 import Header from '../components/Header';
 import { useHistory } from 'react-router';
+import { useQuery } from 'react-query';
 
 const createClasses = makeStyles((theme) => ({
   appBar: {
@@ -43,9 +40,9 @@ const createClasses = makeStyles((theme) => ({
 const useMapKeyToOption = () => {
   const { locale } = useClientContext();
 
-  return (withLocale = true) => (key: string) => ({
-    value: key,
-    name: withLocale ? locale[key] : key
+  return (option: any) => ({
+    value: option._id,
+    name: locale[option.name.key]
   });
 };
 
@@ -64,7 +61,7 @@ interface SelectProps<T = string> {
 
 interface FormikValues {
   title: string;
-  category: categoriesKeys | '';
+  category: string;
   subcategory: subcategoriesHebrew | '';
   content: string;
 }
@@ -75,6 +72,7 @@ const Select = memo((props: SelectProps<selectValues>) => {
   const { data } = props;
   const classes = createClasses();
   const { label, name, options } = data;
+
   const { handleChange, errors, touched } = useFormikContext<FormikValues>();
   const error = useMemo(() => touched[name] && errors[name], [
     errors,
@@ -127,23 +125,34 @@ const FormikForm = () => {
 
   const mapKeyToOption = useMapKeyToOption();
 
-  const categoriesData = useMemo(
+  const { data: categoriesData } = useQuery(
+    categoriesApi.name,
+    categoriesApi.get
+  );
+
+  const categoriesOptions = useMemo(
     () => [
       {
         label: locale.category,
         name: 'category' as selectValues,
-        options: baseCategoriesKeysArray.map(mapKeyToOption())
+        options: categoriesData?.map(mapKeyToOption) || []
       },
       {
         label: locale.subcategory,
         name: 'subcategory' as selectValues,
         options:
-          mapCategoriesKeysToHebrewSubcategories[
-            category as categoriesKeys
-          ]?.map(mapKeyToOption(false)) || []
+          categoriesData
+            ?.find((categoryData) => categoryData._id === category)
+            ?.subcategories.map(mapKeyToOption) || []
       }
     ],
-    [category, locale.category, locale.subcategory, mapKeyToOption]
+    [
+      categoriesData,
+      category,
+      locale.category,
+      locale.subcategory,
+      mapKeyToOption
+    ]
   );
 
   const theme = useTheme();
@@ -168,8 +177,8 @@ const FormikForm = () => {
             }}
           />
         </Grid>
-        {categoriesData.map((data) => (
-          <Grid container component={Box} my={1} key={data.label}>
+        {categoriesOptions.map((data) => (
+          <Grid container component={Box} my={1} key={data.name}>
             <Select data={data} />
           </Grid>
         ))}

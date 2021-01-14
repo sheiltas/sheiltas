@@ -60,13 +60,17 @@ export const initDB = async () => {
                     ? acc.concat(
                           new CategoryModel({
                               name: localeId,
-                              subcategories: mapCategoriesKeysToHebrewSubcategories[
-                                  key as categoriesKeys
-                              ].map((heSubcategory) =>
-                                  locales.find(
-                                      (singleLocale) => singleLocale.translation.he === heSubcategory
+                              subcategories: mapCategoriesKeysToHebrewSubcategories[key as categoriesKeys]
+                                  .map((heSubcategory) =>
+                                      locales.find(
+                                          (singleLocale) => singleLocale.translation.he === heSubcategory
+                                      )
                                   )
-                              )
+                                  .map((subcategoryLocale) =>
+                                      subcategories.find(
+                                          (subcategory) => subcategory.name === subcategoryLocale._id
+                                      )
+                                  )
                           })
                       )
                     : acc;

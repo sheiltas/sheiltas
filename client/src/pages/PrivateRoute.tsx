@@ -22,8 +22,7 @@ const PrivateRoute = (props: Props) => {
     }
     return false;
   }, []);
-  console.log('isAuthorized', isAuthorized);
-  console.log('path', path);
+
   return isAuthorized ? (
     // TODO remove when more routes
     path === '/' ? (

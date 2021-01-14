@@ -41,7 +41,6 @@ const LoginPage = () => {
   const onSubmit = useCallback(
     async (values) => {
       const loginRes = await login(values);
-      console.log('loginRes', loginRes);
       if (loginRes) {
         history.push('/editor');
       } else {

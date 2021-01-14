@@ -15,7 +15,9 @@ const categorySchemaObj: Record<keyof Omit<Category, '_id'>, SchemaTypeOpts<any>
     subcategories: [
         {
             type: Schema.Types.ObjectId,
-            ref: SubcategoryModel
+            // ref: SubcategoryModel
+            ref: 'subcategories'
+            //
         }
     ]
 };

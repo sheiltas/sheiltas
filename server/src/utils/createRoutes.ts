@@ -3,7 +3,7 @@ import { Document, Error, Model } from 'mongoose';
 import { Request, RequestHandler, Response } from 'express';
 import { methods } from '../../../client/src/types';
 
-type apiFunction = (req: Request, res: Response) => Promise<void>;
+type apiFunction = (req: Request, res: Response) => Promise<void | Response<any>>;
 
 type handleErrorFunction = (res: Response, error: Error, options?: { status: number }) => void;
 
@@ -33,8 +33,6 @@ export const tryCatchHandler = async (
     try {
         await tryFunc(req, res);
     } catch (e) {
-        console.log(e);
-
         const { errStatus } = options;
         handleError(res, e, { status: errStatus });
     }

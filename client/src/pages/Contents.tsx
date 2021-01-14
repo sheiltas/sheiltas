@@ -4,7 +4,7 @@ import Typography from '@material-ui/core/Typography';
 
 import { useQuery } from 'react-query';
 
-import { isType, User } from '../types';
+import { Category, isType, User } from '../types';
 import { articlesApi } from '../api';
 import Header from '../components/Header';
 import { useClientContext } from '../providers/ClientProvider';
@@ -32,25 +32,32 @@ const ContentsPage = () => {
             ? author
             : ({} as any);
 
+          const date = new Date(updatedAt.toString());
+          const dateText = `${date.getDate()}/${
+            date.getMonth() + 1
+          }/${date.getFullYear()}`;
+
           return (
-            <Grid key={title}>
-              <Grid container alignItems="baseline">
-                <Typography variant="h2">{title}</Typography>
-                <Typography variant="subtitle1"> / {updatedAt}</Typography>
-              </Grid>
-              <Typography variant="subtitle1">{`${locale.category}: ${locale[category]}`}</Typography>
-              {subcategory && (
+            isType<Category>(category, 'name') && (
+              <Grid key={title}>
+                <Grid container alignItems="baseline">
+                  <Typography variant="h2">{title}</Typography>
+                  <Typography variant="subtitle1"> | {dateText}</Typography>
+                </Grid>
+                <Typography variant="subtitle1">{`${locale.category}: ${
+                  locale[category.name.key]
+                }`}</Typography>
+                {subcategory && (
+                  <Typography variant="subtitle1">
+                    {`${locale.subcategory}: ${locale[subcategory.name.key]}`}
+                  </Typography>
+                )}
                 <Typography variant="subtitle1">
-                  {`${locale.subcategory}: ${
-                    locale[subcategory] || subcategory
-                  }`}
+                  {`${locale.author}: ${fullName}`}
                 </Typography>
-              )}
-              <Typography variant="subtitle1">
-                {`${locale.author}: ${fullName}`}
-              </Typography>
-              <Typography>{textContent}</Typography>
-            </Grid>
+                <Typography>{textContent}</Typography>
+              </Grid>
+            )
           );
         })}
     </Grid>

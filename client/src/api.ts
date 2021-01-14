@@ -1,5 +1,13 @@
 import axios, { AxiosInstance } from 'axios';
-import { Article, Locale, loginObj, methods, routes } from './types';
+import {
+  Article,
+  Category,
+  ClientArticle,
+  Locale,
+  loginObj,
+  methods,
+  routes
+} from './types';
 
 const baseURL =
   process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:4000/api';
@@ -43,7 +51,7 @@ const addToken = (axiosInstance: AxiosInstance) => {
   throw Error('No token');
 };
 
-function createApi<T>(
+function createApi<T, GetOverride = T>(
   apiName: routes,
   options: {
     publicApi: Partial<Record<methods, boolean>>;
@@ -59,7 +67,7 @@ function createApi<T>(
   const { publicApi } = options;
   return {
     name: apiName,
-    get: async (params: unknown): Promise<T[]> => {
+    get: async (params: unknown): Promise<GetOverride[]> => {
       try {
         if (!publicApi.get) {
           addToken(axiosInstance);
@@ -82,7 +90,7 @@ function createApi<T>(
   };
 }
 
-const articlesApi = createApi<Article>(routes.ARTICLES);
+const articlesApi = createApi<Article, ClientArticle>(routes.ARTICLES);
 
 const localesApi = createApi<Locale>(routes.LOCALES, {
   publicApi: {
@@ -90,4 +98,6 @@ const localesApi = createApi<Locale>(routes.LOCALES, {
   }
 });
 
-export { authApi, articlesApi, localesApi };
+const categoriesApi = createApi<Category>(routes.CATEGORIES);
+
+export { authApi, articlesApi, localesApi, categoriesApi };

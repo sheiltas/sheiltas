@@ -7,18 +7,28 @@ const articlesRoutes = createRoutes<ArticleDocument>(routes.ARTICLES, ArticleMod
     middleware: verifyToken,
     exclude: ['delete'],
     overrides: {
-        get: async (req, res) => {
-            console.log('gothete');
-            try {
-                res.send(
-                    await ArticleModel.find({ ...req.body }).populate([
-                        { path: 'author', select: 'fullName' }
+        get: async (req, res) =>
+            res.send(
+                await ArticleModel.find({ ...req.body })
+                    .lean()
+                    .populate([
+                        { path: 'author', select: 'fullName' },
+                        {
+                            path: 'category',
+                            populate: {
+                                path: 'name',
+                                select: 'key'
+                            }
+                        },
+                        {
+                            path: 'subcategory',
+                            populate: {
+                                path: 'name',
+                                select: 'key'
+                            }
+                        }
                     ])
-                );
-            } catch (e) {
-                handleError(res, e);
-            }
-        }
+            )
     }
 });
 
