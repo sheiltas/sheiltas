@@ -7,7 +7,7 @@ const articlesRoutes = createRoutes<ArticleDocument>(routes.ARTICLES, ArticleMod
     middleware: verifyToken,
     exclude: ['delete'],
     overrides: {
-        get: async (req, res) =>
+        get: async (req, res) => {
             res.send(
                 await ArticleModel.find({ ...req.body })
                     .lean()
@@ -28,7 +28,8 @@ const articlesRoutes = createRoutes<ArticleDocument>(routes.ARTICLES, ArticleMod
                             }
                         }
                     ])
-            )
+            );
+        }
     }
 });
 
