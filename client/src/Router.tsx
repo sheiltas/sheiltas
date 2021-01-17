@@ -5,24 +5,22 @@ import EditorPage from './pages/Editor';
 import PrivateRoute from './pages/PrivateRoute';
 import ContentsPage from './pages/Contents';
 
-const Router = () => {
-  return (
-    <BrowserRouter>
-      <Switch>
-        {/*  Should be /login*/}
-        <Route path="/" exact>
-          <LoginPage />
-        </Route>
+const Router = () => (
+  <BrowserRouter>
+    <Switch>
+      {/*  Should be /login */}
+      <Route path="/" exact>
+        <LoginPage />
+      </Route>
 
-        <PrivateRoute path="/editor">
-          <EditorPage />
-        </PrivateRoute>
-        <PrivateRoute path="/contents">
-          <ContentsPage />
-        </PrivateRoute>
-      </Switch>
-    </BrowserRouter>
-  );
-};
+      <PrivateRoute path="/editor">
+        <EditorPage />
+      </PrivateRoute>
+      <PrivateRoute path="/contents">
+        <ContentsPage />
+      </PrivateRoute>
+    </Switch>
+  </BrowserRouter>
+);
 
 export default memo(Router);

@@ -11,19 +11,29 @@ import React, {
 } from 'react';
 import { useQuery } from 'react-query';
 
-import { ChildrenProps, languages, loginObj } from '../types';
+import { ChildrenProps, Languages, LoginObj, User } from '../types';
 import { authApi, localesApi } from '../api';
-import { decodeJwt, languages as languagesArray } from '../utils';
+import { languages as languagesArray } from '../utils';
 
-interface context {
+export const decodeJwt = (
+  token: string
+): Pick<User, 'username' | 'fullName'> | false => {
+  try {
+    return JSON.parse(atob(token.split('.')[1]));
+  } catch {
+    return false;
+  }
+};
+
+interface IClientProviderContext {
   locale: { [key: string]: string };
-  setSelectedLanguage: Dispatch<SetStateAction<languages>>;
-  selectedLanguage: languages;
-  login: (body: loginObj) => Promise<boolean>;
+  setSelectedLanguage: Dispatch<SetStateAction<Languages>>;
+  selectedLanguage: Languages;
+  login: (body: LoginObj) => Promise<boolean>;
   user: { fullName: string; username: string };
 }
 
-const Context = createContext<context>({
+const Context = createContext<IClientProviderContext>({
   locale: {},
   setSelectedLanguage: () => undefined,
   selectedLanguage: 'he',
@@ -36,14 +46,14 @@ const ClientProvider = (props: ChildrenProps) => {
   const [user, setUser] = useState({ fullName: '', username: '' });
 
   // Locales handlers
-  const [selectedLanguage, setSelectedLanguage] = useState<languages>('he');
+  const [selectedLanguage, setSelectedLanguage] = useState<Languages>('he');
   const [localesData, setLocalsData] = useState<
-    Record<languages, Record<string, string>>
+    Record<Languages, Record<string, string>>
   >(
     languagesArray.reduce((acc, language) => {
       acc[language] = {};
       return acc;
-    }, {} as Record<languages, Record<string, string>>)
+    }, {} as Record<Languages, Record<string, string>>)
   );
 
   useQuery(localesApi.name, localesApi.get, {
@@ -60,7 +70,7 @@ const ClientProvider = (props: ChildrenProps) => {
           languagesArray.reduce((acc, lang) => {
             acc[lang] = {};
             return acc;
-          }, {} as any)
+          }, {} as Record<string, Record<string, string>>)
         )
       );
     }
@@ -74,21 +84,22 @@ const ClientProvider = (props: ChildrenProps) => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      const { username, fullName } = decodeJwt(token);
-      setUser({ username, fullName });
+      const { username, fullName } = decodeJwt(token) || {};
+      if (username && fullName) {
+        setUser({ username, fullName });
+      }
     }
   }, []);
 
-  const login = useCallback(async (body: loginObj) => {
+  const login = useCallback(async (body: LoginObj) => {
     const token = await authApi.login(body);
     if (typeof token === 'string') {
-      const { username, fullName } = decodeJwt(token);
+      const { username, fullName } = decodeJwt(token) || {};
       if (username && fullName) {
         setUser({ username, fullName });
         return true;
-      } else {
-        return false;
       }
+      return false;
     }
     return false;
   }, []);
@@ -110,4 +121,5 @@ const ClientProvider = (props: ChildrenProps) => {
 
 export default memo(ClientProvider);
 
-export const useClientContext = () => useContext(Context);
+export const useClientContext = (): IClientProviderContext =>
+  useContext(Context);

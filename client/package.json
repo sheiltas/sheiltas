@@ -10,6 +10,7 @@
     "@testing-library/user-event": "^12.1.10",
     "axios": "^0.21.1",
     "formik": "^2.2.6",
+    "jss": "^10.5.0",
     "jss-rtl": "^0.3.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
@@ -28,6 +29,16 @@
     "@types/react-dom": "^17.0.0",
     "@types/react-router": "^5.1.8",
     "@types/react-router-dom": "^5.1.6",
+    "@typescript-eslint/eslint-plugin": "^4.13.0",
+    "@typescript-eslint/parser": "^4.13.0",
+    "eslint": "^7.18.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-airbnb-typescript": "^12.0.0",
+    "eslint-config-prettier": "^7.1.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-react": "^7.22.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
     "prettier": "^2.2.1"
   },
   "scripts": {
@@ -35,17 +46,36 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "postbuild": "cp -r build ../server"
+    "postbuild": "cp -r build ../server",
+    "lint": "eslint ./src --ext .ts,.tsx"
   },
   "prettier": {
     "trailingComma": "none",
     "singleQuote": true
   },
   "eslintConfig": {
+    "parserOptions": {
+      "ecmaVersion": 6,
+      "sourceType": "module",
+      "project": [
+        "./tsconfig.json"
+      ]
+    },
+    "env": {
+      "browser": true
+    },
     "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+      "airbnb-typescript",
+      "airbnb/hooks",
+      "plugin:@typescript-eslint/recommended",
+      "eslint-config-prettier"
+    ],
+    "rules": {
+      "no-underscore-dangle": 0,
+      "@typescript-eslint/comma-dangle": 0,
+      "indent": 0,
+      "@typescript-eslint/indent": 0
+    }
   },
   "browserslist": {
     "production": [

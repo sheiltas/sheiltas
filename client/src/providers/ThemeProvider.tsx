@@ -1,11 +1,13 @@
 import React, { memo, useMemo } from 'react';
 import {
   unstable_createMuiStrictModeTheme as createMuiTheme,
-  ThemeProvider as MuiThemeProvider
+  ThemeProvider as MuiThemeProvider,
+  StylesProvider,
+  jssPreset
 } from '@material-ui/core/styles';
 import { create } from 'jss';
 import rtl from 'jss-rtl';
-import { StylesProvider, jssPreset } from '@material-ui/core/styles';
+
 import responsiveFontSizes from '@material-ui/core/styles/responsiveFontSizes';
 import createPalette from '@material-ui/core/styles/createPalette';
 
@@ -43,7 +45,7 @@ const ThemeProvider = (props: ChildrenProps) => {
     selectedLanguage
   ]);
 
-  const theme: any = useMemo(
+  const theme = useMemo(
     () =>
       responsiveFontSizes(
         createMuiTheme({

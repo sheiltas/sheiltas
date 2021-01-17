@@ -40,7 +40,7 @@ const createClasses = makeStyles((theme) => ({
 const useMapKeyToOption = () => {
   const { locale } = useClientContext();
 
-  return (option: any) => ({
+  return (option: { _id: string; name: { key: string } }) => ({
     value: option._id,
     name: locale[option.name.key]
   });
@@ -66,9 +66,9 @@ interface FormikValues {
   content: string;
 }
 
-type selectValues = 'category' | 'subcategory';
+type SelectValues = 'category' | 'subcategory';
 
-const Select = memo((props: SelectProps<selectValues>) => {
+const Select = memo((props: SelectProps<SelectValues>) => {
   const { data } = props;
   const classes = createClasses();
   const { label, name, options } = data;
@@ -98,10 +98,10 @@ const Select = memo((props: SelectProps<selectValues>) => {
         }}
       >
         {options.map((option) => {
-          const { value, name } = option;
+          const { value, name: optionName } = option;
           return (
             <MenuItem key={value} value={value}>
-              <Typography>{name}</Typography>
+              <Typography>{optionName}</Typography>
             </MenuItem>
           );
         })}
@@ -134,12 +134,12 @@ const FormikForm = () => {
     () => [
       {
         label: locale.category,
-        name: 'category' as selectValues,
+        name: 'category' as SelectValues,
         options: categoriesData?.map(mapKeyToOption) || []
       },
       {
         label: locale.subcategory,
-        name: 'subcategory' as selectValues,
+        name: 'subcategory' as SelectValues,
         options:
           categoriesData
             ?.find((categoryData) => categoryData._id === category)
@@ -250,7 +250,7 @@ const EditorPage = () => {
       <Header />
       <Box className={classes.paper} component={Paper} width="100%" mx={2}>
         <Grid container alignItems="center" justify="space-between">
-          <Typography> {locale.editorPageTitle}:</Typography>
+          <Typography>{`${locale.editorPageTitle}:`}</Typography>
           <Button variant="contained" color="primary">
             <Link to="/contents">
               <Typography>{locale.toContentsPage}</Typography>

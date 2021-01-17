@@ -1,12 +1,12 @@
 import axios, { AxiosInstance } from 'axios';
 import {
   Article,
-  Category,
   ClientArticle,
+  ClientCategory,
   Locale,
-  loginObj,
-  methods,
-  routes
+  LoginObj,
+  Methods,
+  Routes
 } from './types';
 
 const baseURL =
@@ -17,10 +17,10 @@ const axiosInstance = axios.create({
 });
 
 const authApi = {
-  login: async (loginData: loginObj): Promise<string | boolean> => {
+  login: async (loginData: LoginObj): Promise<string | boolean> => {
     try {
       const { data: token } = await axiosInstance.post(
-        `/${routes.LOGIN}`,
+        `/${Routes.LOGIN}`,
         loginData
       );
       localStorage.setItem('token', token);
@@ -30,31 +30,33 @@ const authApi = {
       return false;
     }
   },
-  keepAlive: async () => {
+  keepAlive: async (): Promise<boolean> => {
     try {
-      const { data: token } = await axiosInstance.get(`/${routes.KEEP_ALIVE}`);
+      const { data: token } = await axiosInstance.get(`/${Routes.KEEP_ALIVE}`);
       localStorage.setItem('token', token);
       axiosInstance.defaults.headers.authorization = `Bearer ${token}`;
+      return true;
     } catch (e) {
-      console.log('e', e);
-      return e;
+      // console.log('e', e);
+      return false;
     }
   }
 };
 
-const addToken = (axiosInstance: AxiosInstance) => {
+const addToken = (axiosInstanceArg: AxiosInstance) => {
   const token = localStorage.getItem('token');
   if (token) {
-    axiosInstance.defaults.headers.authorization = `Bearer ${token}`;
-    return axiosInstance;
+    // eslint-disable-next-line no-param-reassign
+    axiosInstanceArg.defaults.headers.authorization = `Bearer ${token}`;
+    return axiosInstanceArg;
   }
   throw Error('No token');
 };
 
 function createApi<T, GetOverride = T>(
-  apiName: routes,
+  apiName: Routes,
   options: {
-    publicApi: Partial<Record<methods, boolean>>;
+    publicApi: Partial<Record<Methods, boolean>>;
   } = {
     publicApi: {
       get: false,
@@ -90,14 +92,14 @@ function createApi<T, GetOverride = T>(
   };
 }
 
-const articlesApi = createApi<Article, ClientArticle>(routes.ARTICLES);
+const articlesApi = createApi<Article, ClientArticle>(Routes.ARTICLES);
 
-const localesApi = createApi<Locale>(routes.LOCALES, {
+const localesApi = createApi<Locale>(Routes.LOCALES, {
   publicApi: {
     get: true
   }
 });
 
-const categoriesApi = createApi<Category>(routes.CATEGORIES);
+const categoriesApi = createApi<ClientCategory>(Routes.CATEGORIES);
 
 export { authApi, articlesApi, localesApi, categoriesApi };
