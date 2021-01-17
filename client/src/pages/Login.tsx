@@ -1,5 +1,5 @@
-import React, { useCallback, useState } from 'react';
-import { useHistory } from 'react-router';
+import React, { useCallback, useState, memo } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
 
 import Grid from '@material-ui/core/Grid';
@@ -123,4 +123,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default memo(LoginPage);

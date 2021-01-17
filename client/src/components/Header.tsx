@@ -24,7 +24,8 @@ const Header = () => {
 
       <AppBar position="fixed" className={classes.appBar}>
         <Typography variant="h1" align="center" color="secondary">
-          {selectedLanguage === 'he' && '!'}Sheilta`S
+          {selectedLanguage === 'he' && '!'}
+          Sheilta`S
           {selectedLanguage !== 'he' && '!'}
         </Typography>
       </AppBar>
