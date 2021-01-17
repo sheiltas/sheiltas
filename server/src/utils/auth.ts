@@ -1,7 +1,7 @@
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import { NextFunction, Request, Response } from 'express';
-import { authData as authDataType } from '../../../client/src/types';
+import { AuthData as authDataType } from '../../../client/src/types';
 
 export const encryptPasswordSync = (rawPassword: string) =>
     bcrypt.hashSync(rawPassword, bcrypt.genSaltSync(10));

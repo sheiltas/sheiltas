@@ -1,8 +1,8 @@
 import createRoutes from '../utils/createRoutes';
 import UserModel, { UserDocument } from '../models/users';
-import { routes } from '../../../client/src/types';
+import { Routes } from '../../../client/src/types';
 
-const usersRoutes = createRoutes<UserDocument>(routes.USERS, UserModel, {
+const usersRoutes = createRoutes<UserDocument>(Routes.USERS, UserModel, {
     exclude: ['delete', 'put']
 });
 

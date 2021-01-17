@@ -1,9 +1,9 @@
 import createRoutes, { handleError } from '../utils/createRoutes';
 import ArticleModel, { ArticleDocument } from '../models/articles';
-import { routes } from '../../../client/src/types';
+import { Routes } from '../../../client/src/types';
 import { verifyToken } from '../utils/auth';
 
-const articlesRoutes = createRoutes<ArticleDocument>(routes.ARTICLES, ArticleModel, {
+const articlesRoutes = createRoutes<ArticleDocument>(Routes.ARTICLES, ArticleModel, {
     middleware: verifyToken,
     exclude: ['delete'],
     overrides: {
