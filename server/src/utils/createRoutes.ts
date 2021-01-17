@@ -1,7 +1,7 @@
 import * as express from 'express';
 import { Document, Error, Model } from 'mongoose';
 import { Request, RequestHandler, Response } from 'express';
-import { methods } from '../../../client/src/types';
+import { Methods } from '../../../client/src/types';
 
 type apiFunction = (req: Request, res: Response) => Promise<void | Response<any>>;
 
@@ -58,8 +58,8 @@ const createRoutes = function <T extends Document>(
     model: Model<T>,
     options: {
         middleware?: Array<RequestHandler> | RequestHandler;
-        exclude?: Array<methods>;
-        overrides?: Partial<Record<methods, apiFunction>>;
+        exclude?: Array<Methods>;
+        overrides?: Partial<Record<Methods, apiFunction>>;
     } = {
         exclude: [],
         overrides: {}

@@ -1,5 +1,5 @@
 import * as express from 'express';
-import { authData as authDataType, loginObj, routes } from '../../../client/src/types';
+import { AuthData as authDataType, LoginObj, Routes } from '../../../client/src/types';
 import { createToken, verifyToken } from '../utils/auth';
 import UserModel from '../models/users';
 import * as bcrypt from 'bcrypt';
@@ -9,8 +9,8 @@ const router = express.Router();
 
 const createBearerHeader = (authData: authDataType) => `Bearer ${createToken(authData)}`;
 
-router.post(`/${routes.LOGIN}`, async (req, res) => {
-    const { username, password: reqPassword } = req.body as loginObj;
+router.post(`/${Routes.LOGIN}`, async (req, res) => {
+    const { username, password: reqPassword } = req.body as LoginObj;
     try {
         const user = await UserModel.findOne({ username });
         const { password: hashedPassword, fullName, _id } = user || {};
@@ -22,11 +22,11 @@ router.post(`/${routes.LOGIN}`, async (req, res) => {
     }
 });
 
-router.get(`/${routes.KEEP_ALIVE}`, verifyToken, (req, res) => {
+router.get(`/${Routes.KEEP_ALIVE}`, verifyToken, (req, res) => {
     res.set(createBearerHeader(res.locals.authData)).sendStatus(200);
 });
 
-router.post(`/${routes.SIGNUP}`, async (req, res) => {
+router.post(`/${Routes.SIGNUP}`, async (req, res) => {
     try {
         const { username, password, fullName } = req.body;
         await UserModel.create({ username, password, fullName });
