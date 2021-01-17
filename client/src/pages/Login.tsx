@@ -12,6 +12,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 
 import { useClientContext } from '../providers/ClientProvider';
 import Header from '../components/Header';
+import { ClientRoutes } from '../types';
 
 const createClasses = makeStyles((theme) => ({
   container: {
@@ -42,7 +43,7 @@ const LoginPage = () => {
     async (values) => {
       const loginRes = await login(values);
       if (loginRes) {
-        history.push('/editor');
+        history.push(ClientRoutes.EDITOR_ARTICLE);
       } else {
         toggleError(true);
       }

@@ -1,6 +1,6 @@
 import React, { useMemo, memo } from 'react';
 import { Redirect, Route } from 'react-router-dom';
-import { ChildrenProps } from '../types';
+import { ChildrenProps, ClientRoutes } from '../types';
 
 interface Props extends ChildrenProps {
   path: string;
@@ -25,13 +25,13 @@ const PrivateRoute = (props: Props) => {
 
   const page =
     // TODO remove when more routes
-    path === '/' ? (
-      <Redirect to="/editor" />
+    path === ClientRoutes.ROOT ? (
+      <Redirect to={ClientRoutes.EDITOR_ARTICLE} />
     ) : (
       <Route path={path}>{children}</Route>
     );
 
-  return isAuthorized ? page : <Redirect to="/" />;
+  return isAuthorized ? page : <Redirect to={ClientRoutes.ROOT} />;
 };
 
 export default memo(PrivateRoute);

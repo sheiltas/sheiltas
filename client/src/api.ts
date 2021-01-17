@@ -3,10 +3,12 @@ import {
   Article,
   ClientArticle,
   ClientCategory,
+  ClientSheilta,
   Locale,
   LoginObj,
   Methods,
-  Routes
+  Routes,
+  Sheilta
 } from './types';
 
 const baseURL =
@@ -94,6 +96,8 @@ function createApi<T, GetOverride = T>(
 
 const articlesApi = createApi<Article, ClientArticle>(Routes.ARTICLES);
 
+const sheiltasApi = createApi<Sheilta, ClientSheilta>(Routes.SHEILTAS);
+
 const localesApi = createApi<Locale>(Routes.LOCALES, {
   publicApi: {
     get: true
@@ -102,4 +106,4 @@ const localesApi = createApi<Locale>(Routes.LOCALES, {
 
 const categoriesApi = createApi<ClientCategory>(Routes.CATEGORIES);
 
-export { authApi, articlesApi, localesApi, categoriesApi };
+export { authApi, articlesApi, localesApi, categoriesApi, sheiltasApi };

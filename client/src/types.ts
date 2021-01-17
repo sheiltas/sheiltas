@@ -66,6 +66,16 @@ export interface ClientArticle extends SchemaTimestampsConfig {
   title: string;
 }
 
+export interface ClientSheilta extends SchemaTimestampsConfig {
+  _id: string;
+  author?: Pick<User, 'fullName' | '_id'>;
+  title: string;
+  question: string;
+  answer: string;
+  category: ClientCategory;
+  subcategory: ClientSubcategory;
+}
+
 // Type guards
 // eslint-disable-next-line
 export function isType<T>(obj: T | any, keys: string | string[]): obj is T {
@@ -97,6 +107,13 @@ export enum Routes {
   LOCALES = 'locales',
   CATEGORIES = 'categories',
   SUBCATEGORIES = 'subcategories'
+}
+
+export enum ClientRoutes {
+  ROOT = '/',
+  EDITOR_ARTICLE = '/editor/article',
+  EDITOR_SHEILTA = '/editor/sheilta',
+  CONTENTS = '/contents'
 }
 
 interface SchemaTimestampsConfig {

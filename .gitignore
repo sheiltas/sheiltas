@@ -249,4 +249,4 @@ fabric.properties
 
 server/app.yaml
 server/app-dev.yaml
-resources
+resources/initSheiltas.json
