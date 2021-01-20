@@ -250,3 +250,5 @@ fabric.properties
 server/app.yaml
 server/app-dev.yaml
 resources/initSheiltas.json
+
+server/build
