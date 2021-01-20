@@ -50,7 +50,7 @@ const Select = <T extends Record<keyof T, unknown>>(props: SelectProps) => {
         label={label}
         as={MuiSelect}
         onChange={handleChange}
-        error={error}
+        error={!!error}
         MenuProps={{
           disablePortal: true
         }}

@@ -83,18 +83,6 @@ const FormikForm = memo(() => {
   return (
     <Grid container component={Form}>
       <Grid container>
-        <Grid component={Box} container my={1}>
-          <Field
-            name="title"
-            as={TextField}
-            onChange={handleChange}
-            label={locale.articleName}
-            variant="outlined"
-            fullWidth
-            helperText={touched.title && errors.title}
-            error={errors.title && touched.title}
-          />
-        </Grid>
         {categoriesOptions.map((data) => (
           <Grid container component={Box} my={1} key={data.name}>
             <Select<FormikValues> data={data} />
@@ -161,7 +149,9 @@ const SheiltaForm = () => {
 
   const onSubmit = useCallback(
     async (values: FormikValues) => {
-      if (isType<Omit<Sheilta, '_id'>>(values, ['content', 'category'])) {
+      if (
+        isType<Omit<Sheilta, '_id'>>(values, ['question', 'answer', 'category'])
+      ) {
         const res = await sheiltasApi.post(values);
         alert(
           typeof res !== 'string'
