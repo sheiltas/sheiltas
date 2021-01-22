@@ -1,14 +1,42 @@
-import * as express from 'express';
-import * as helmet from 'helmet';
-import * as mongoose from 'mongoose';
-import * as morgan from 'morgan';
-import { join } from 'path';
-import * as compression from 'compression';
+import express from 'express';
+import helmet from 'helmet';
+import mongoose from 'mongoose';
+import morgan from 'morgan';
+import { join, resolve } from 'path';
+import compression from 'compression';
 
-import * as cors from 'cors';
+import cors from 'cors';
 
 import routes from './routes/index';
 import { initDB } from './utils/initDB';
+
+import { RequestHandler } from 'express';
+import { readFile } from 'fs';
+
+import App from '../../client/src/App';
+
+// import * as React, react from 'react';
+import React, { createElement } from 'react';
+
+import * as ReactDOMServer from 'react-dom/server';
+
+const serverRenderer: RequestHandler = (req, res, next) => {
+    const filePath = resolve(__dirname, '..', 'build', 'index.html');
+
+    readFile(filePath, 'utf8', (err, htmlData) => {
+        if (err) {
+            console.error('err', err);
+            return res.status(404).end();
+        }
+
+        // render the app as a string
+        const html = ReactDOMServer.renderToString(<App />);
+        console.log('html', html);
+        //
+        // inject the rendered app into our html and send it
+        return res.send(htmlData.replace('<div id="root"></div>', `<div id="root">${html}</div>`));
+    });
+};
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -35,6 +63,8 @@ app.use(compression());
 app.use(express.json({ limit: '60mb' }), express.urlencoded({ extended: false }));
 
 app.use('/api', routes);
+
+app.use('^/$', serverRenderer);
 
 app.use(express.static(sitePath));
 
