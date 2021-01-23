@@ -11,13 +11,9 @@ import Box from '@material-ui/core/Box';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 
 import { useClientContext } from '../providers/ClientProvider';
-import Header from '../components/Header';
 import { ClientRoutes } from '../types';
 
 const createClasses = makeStyles((theme) => ({
-  container: {
-    height: '100%'
-  },
   formContainer: {
     minWidth: '300px',
     minHeight: '200px'
@@ -52,15 +48,7 @@ const LoginPage = () => {
   );
 
   return (
-    <Grid
-      container
-      justify="center"
-      alignItems="center"
-      className={classes.container}
-      item
-      xs
-    >
-      <Header />
+    <Grid container justify="center" alignItems="center" item xs>
       <Paper elevation={3} className={classes.formContainer}>
         <Grid
           container

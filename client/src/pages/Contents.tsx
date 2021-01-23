@@ -5,18 +5,16 @@ import Typography from '@material-ui/core/Typography';
 import { useQuery } from 'react-query';
 
 import { Category, isType } from '../types';
-import { articlesApi } from '../api';
-import Header from '../components/Header';
+import { articlesApi, sheiltasApi } from '../api';
 import { useClientContext } from '../providers/ClientProvider';
 
 const ContentsPage = () => {
   const { data: contents } = useQuery([articlesApi.name, {}], articlesApi.get);
+  // const { data: contents } = useQuery([sheiltasApi.name, {}], sheiltasApi.get);
   const { locale } = useClientContext();
 
   return (
     <Grid>
-      <Header />
-
       {!!contents?.length &&
         contents.map((content) => {
           const {

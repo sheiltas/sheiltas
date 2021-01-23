@@ -21,6 +21,9 @@
     "author": "מחבר",
     "question":  "שאלה",
     "answer":  "תשובה",
+    "sheilta":  "שאילתא",
+    "article":  "מאמר",
+    "title": "כותרת",
 
     "aroundTheYear": "במעגל השנה",
     "destructionToSalvation": "מחורבן לגאולה",
@@ -222,6 +225,9 @@
     "author": "Author",
     "question":  "Question",
     "answer":  "Answer",
+    "sheilta":  "Sheilta",
+    "article":  "Article",
+    "title": "Title",
 
     "aroundTheYear": "במעגל השנה",
     "destructionToSalvation": "מחורבן לגאולה",

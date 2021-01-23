@@ -83,6 +83,18 @@ const FormikForm = memo(() => {
   return (
     <Grid container component={Form}>
       <Grid container>
+        <Grid container component={Box} my={1}>
+          <Field
+            name="title"
+            as={TextField}
+            onChange={handleChange}
+            label={locale.title}
+            variant="outlined"
+            fullWidth
+            helperText={touched.title && errors.title}
+            error={errors.title && touched.title}
+          />
+        </Grid>
         {categoriesOptions.map((data) => (
           <Grid container component={Box} my={1} key={data.name}>
             <Select<FormikValues> data={data} />
@@ -142,6 +154,7 @@ const SheiltaForm = () => {
         if (!value && key !== 'subcategory') {
           acc[key] = locale.requiredField;
         }
+        console.log('acc', acc);
         return acc;
       }, {} as Record<string, string>),
     [locale.requiredField]
@@ -149,6 +162,7 @@ const SheiltaForm = () => {
 
   const onSubmit = useCallback(
     async (values: FormikValues) => {
+      console.log('values', values);
       if (
         isType<Omit<Sheilta, '_id'>>(values, ['question', 'answer', 'category'])
       ) {

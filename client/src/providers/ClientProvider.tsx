@@ -31,6 +31,7 @@ interface IClientProviderContext {
   selectedLanguage: Languages;
   login: (body: LoginObj) => Promise<boolean>;
   user: { fullName: string; username: string };
+  isAuthorized: boolean;
 }
 
 const Context = createContext<IClientProviderContext>({
@@ -38,12 +39,21 @@ const Context = createContext<IClientProviderContext>({
   setSelectedLanguage: () => undefined,
   selectedLanguage: 'he',
   login: () => Promise.resolve(false),
-  user: { fullName: '', username: '' }
+  user: { fullName: '', username: '' },
+  isAuthorized: false
 });
 
 const ClientProvider = (props: ChildrenProps) => {
   const { children } = props;
   const [user, setUser] = useState({ fullName: '', username: '' });
+  const isAuthorized = useMemo(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const { username, fullName } = decodeJwt(token) || {};
+      return !!(username && fullName);
+    }
+    return false;
+  }, []);
 
   // Locales handlers
   const [selectedLanguage, setSelectedLanguage] = useState<Languages>('he');
@@ -111,7 +121,8 @@ const ClientProvider = (props: ChildrenProps) => {
         setSelectedLanguage,
         selectedLanguage,
         login,
-        user
+        user,
+        isAuthorized
       }}
     >
       {children}

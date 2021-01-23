@@ -3,7 +3,6 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 import Router from './Router';
-import PageTemplate from './pages/PageTemplate';
 import ClientProvider from './providers/ClientProvider';
 import ThemeProvider from './providers/ThemeProvider';
 
@@ -21,9 +20,7 @@ const App = () => (
       <ReactQueryDevtools position="bottom-left" initialIsOpen={false} />
 
       <ThemeProvider>
-        <PageTemplate>
-          <Router />
-        </PageTemplate>
+        <Router />
       </ThemeProvider>
     </ClientProvider>
   </QueryClientProvider>

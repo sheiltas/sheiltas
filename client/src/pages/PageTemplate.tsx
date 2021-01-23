@@ -1,6 +1,7 @@
 import React, { memo, ReactNode } from 'react';
 import { Grid } from '@material-ui/core';
 import makeStyles from '@material-ui/core/styles/makeStyles';
+import Header from '../components/Header';
 
 interface Props {
   children: ReactNode;
@@ -8,8 +9,7 @@ interface Props {
 
 const createClasses = makeStyles((theme) => ({
   container: {
-    backgroundColor: theme.palette.background.default,
-    height: '100vh'
+    backgroundColor: theme.palette.background.default
   }
 }));
 
@@ -18,6 +18,8 @@ const PageTemplate = (props: Props) => {
   const classes = createClasses();
   return (
     <Grid container direction="column" className={classes.container}>
+      <Header />
+
       {children}
     </Grid>
   );
