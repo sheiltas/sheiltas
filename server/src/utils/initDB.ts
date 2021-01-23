@@ -366,7 +366,7 @@ export const initDB = async () => {
         { encoding: 'utf-8' },
         async (err, data) => {
             if (err) {
-                return console.error('err', err);
+                return console.error('Error in reading sheiltas:', err);
             }
             const localesData = JSON.parse(data);
             const locales = Object.keys(localesData.en).map(
@@ -440,3 +440,40 @@ export const initSheiltas = () =>
         }
         SheiltaModel.insertMany(JSON.parse(data)).then(() => console.log('Initiated sheiltas successfully'));
     });
+
+export const updateLocals = async () => {
+    const localesFromDB = await LocaleModel.find({}, ['key']).lean();
+    readFile(
+        join(__dirname, '../../../resources/localesData.json'),
+        { encoding: 'utf-8' },
+        async (err, data) => {
+            if (err) {
+                return console.error('Error in reading sheiltas:', err);
+            }
+
+            const localesData = JSON.parse(data);
+            const localesKeys = Object.keys(localesData.he);
+
+            const newLocales = localesKeys.reduce((acc, key) => {
+                return localesFromDB.some((locale) => locale.key === key)
+                    ? acc
+                    : acc.concat(
+                          new LocaleModel({
+                              key,
+                              translation: languages.reduce((acc, language) => {
+                                  acc[language] = localesData[language][key];
+                                  return acc;
+                              }, {} as Locale['translation'])
+                          })
+                      );
+            }, []);
+
+            try {
+                await LocaleModel.insertMany(newLocales);
+                console.log('Updated locales successfully');
+            } catch (e) {
+                console.error('Error in updating locales: ', e);
+            }
+        }
+    );
+};
