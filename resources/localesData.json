@@ -24,6 +24,7 @@
     "sheilta":  "שאילתא",
     "article":  "מאמר",
     "title": "כותרת",
+    "loginError": "שם משתמש או סיסמא שגויים",
 
     "aroundTheYear": "במעגל השנה",
     "destructionToSalvation": "מחורבן לגאולה",
@@ -228,6 +229,7 @@
     "sheilta":  "Sheilta",
     "article":  "Article",
     "title": "Title",
+    "loginError": "Username or password are incorrect",
 
     "aroundTheYear": "במעגל השנה",
     "destructionToSalvation": "מחורבן לגאולה",

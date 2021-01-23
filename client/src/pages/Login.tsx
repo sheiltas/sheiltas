@@ -58,7 +58,7 @@ const LoginPage = () => {
           className={classes.formContainer}
           direction="column"
         >
-          {error && <Typography>שם משתמש או סיסמא שגויים</Typography>}
+          {error && <Typography>{locale.loginError}</Typography>}
           <Formik
             initialValues={{
               username: '',
