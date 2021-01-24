@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import { useQuery } from 'react-query';
 
 import { Category, isType } from '../types';
-import { articlesApi, sheiltasApi } from '../api';
+import { articlesApi } from '../api';
 import { useClientContext } from '../providers/ClientProvider';
 
 const ContentsPage = () => {

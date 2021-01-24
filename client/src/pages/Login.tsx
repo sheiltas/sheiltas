@@ -19,8 +19,10 @@ const createClasses = makeStyles((theme) => ({
     minHeight: '200px'
   },
   form: {
-    padding: '30px',
-    gridGap: theme.spacing(2)
+    padding: '30px'
+  },
+  usernameField: {
+    marginBottom: theme.spacing(3)
   },
   button: {
     borderRadius: '30px',
@@ -81,6 +83,7 @@ const LoginPage = () => {
                     as={TextField}
                     label={locale.username}
                     variant="outlined"
+                    className={classes.usernameField}
                   />
                   <Field
                     onChange={handleChange}

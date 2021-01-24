@@ -19,7 +19,7 @@ const port = process.env.PORT;
 mongoose.set('useCreateIndex', true);
 
 const sitePath = join(__dirname, isProduction ? '../../../build' : '../build');
-
+console.log('sitePath', sitePath);
 const app = express();
 
 if (!isProduction) {
@@ -38,7 +38,7 @@ app.use('/api', routes);
 
 app.use(express.static(sitePath));
 
-app.get('/', (req, res) => {
+app.get('/*', (req, res) => {
     res.set(
         'Content-Security-Policy',
         "default-src *; style-src 'self' http://* 'unsafe-inline'; script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'"
