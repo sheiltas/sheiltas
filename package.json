@@ -3,7 +3,8 @@
     "start": "yarn --cwd server run start",
     "build": "yarn --cwd client run build && yarn --cwd server run build",
     "deploy": "yarn run build && yarn --cwd server run deploy",
-    "deploy:dev": "yarn run build && yarn --cwd server run deploy:dev"
+    "deploy:dev": "yarn run build && yarn --cwd server run deploy:dev",
+    "lint": "yarn --cwd client run lint"
   },
   "devDependencies": {}
 }

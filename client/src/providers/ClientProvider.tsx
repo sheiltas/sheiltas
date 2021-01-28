@@ -45,6 +45,7 @@ interface IClientProviderContext {
   >;
 }
 
+// @ts-ignore
 const Context = createContext<IClientProviderContext>({
   locale: {},
   setSelectedLanguage: () => undefined,
@@ -52,8 +53,8 @@ const Context = createContext<IClientProviderContext>({
   login: () => Promise.resolve(false),
   user: { fullName: '', username: '', _id: '' },
   isAuthorized: false,
-  selectedEdit: null,
-  setSelectedEdit: () => undefined
+  selectedEdit: null
+  // setSelectedEdit: () => undefined
 });
 
 const ClientProvider = (props: ChildrenProps) => {
