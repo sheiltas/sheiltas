@@ -4,7 +4,8 @@
     "build": "yarn --cwd client run build && yarn --cwd server run build",
     "deploy": "yarn run build && yarn --cwd server run deploy",
     "deploy:dev": "yarn run build && yarn --cwd server run deploy:dev",
-    "lint": "yarn --cwd client run lint"
+    "lint": "yarn --cwd client run lint",
+    "install": "yarn --cwd client install && yarn --cwd server install"
   },
   "devDependencies": {}
 }
