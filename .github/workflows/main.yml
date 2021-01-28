@@ -33,6 +33,12 @@ jobs:
       - name: Lint client
         run: yarn run lint
 
+      - id: deploy
+        uses: google-github-actions/deploy-appengine@main
+        with:
+          credentials: ${{ secrets.gcp_credentials }}
+        run: yarn run deploy
+
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: |
