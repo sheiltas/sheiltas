@@ -11,7 +11,7 @@ import Typography from '@material-ui/core/Typography';
 
 import { articlesApi, categoriesApi } from '../api';
 import { useClientContext } from '../providers/ClientProvider';
-import { Article, isType } from '../types';
+import { Article, ClientArticle, isType } from '../types';
 import Select from './Select';
 
 type SelectValues = 'category' | 'subcategory';
@@ -122,16 +122,24 @@ const FormikForm = memo(() => {
 });
 
 const ArticleForm = () => {
-  const { locale } = useClientContext();
+  const { locale, selectedEdit, setSelectedEdit } = useClientContext();
 
   const initialValues: FormikValues = useMemo(
-    () => ({
-      title: '',
-      category: '',
-      subcategory: '',
-      content: ''
-    }),
-    []
+    () =>
+      isType<ClientArticle>(selectedEdit, ['title', 'content'])
+        ? {
+            title: selectedEdit.title,
+            category: selectedEdit.category._id,
+            subcategory: selectedEdit.subcategory._id,
+            content: selectedEdit.content
+          }
+        : {
+            title: '',
+            category: '',
+            subcategory: '',
+            content: ''
+          },
+    [selectedEdit]
   );
 
   const validate = useCallback(
@@ -148,7 +156,11 @@ const ArticleForm = () => {
   const onSubmit = useCallback(
     async (values: FormikValues) => {
       if (isType<Omit<Article, '_id'>>(values, ['content', 'category'])) {
-        const res = await articlesApi.post(values);
+        const res = isType<ClientArticle>(selectedEdit, ['title', 'content'])
+          ? await articlesApi.put({ ...values, _id: selectedEdit._id })
+          : await articlesApi.post(values);
+
+        setSelectedEdit(null);
         alert(
           typeof res !== 'string'
             ? locale.articleAddedSuccessfully
@@ -156,7 +168,12 @@ const ArticleForm = () => {
         );
       }
     },
-    [locale.articleAddedSuccessfully, locale.serverError]
+    [
+      locale.articleAddedSuccessfully,
+      locale.serverError,
+      selectedEdit,
+      setSelectedEdit
+    ]
   );
 
   return (

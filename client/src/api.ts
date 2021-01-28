@@ -86,7 +86,17 @@ function createApi<T, GetOverride = T>(
         if (!publicApi.post) {
           addToken(axiosInstance);
         }
-        return await axiosInstance.post(`${apiName}`, body);
+        return await axiosInstance.post(`/${apiName}`, body);
+      } catch (e) {
+        return e;
+      }
+    },
+    put: async (body: T): Promise<T | string> => {
+      try {
+        if (!publicApi.put) {
+          addToken(axiosInstance);
+        }
+        return await axiosInstance.put(`/${apiName}`, body);
       } catch (e) {
         return e;
       }

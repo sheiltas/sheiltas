@@ -1,17 +1,25 @@
 import React, { memo } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 
 import { useQuery } from 'react-query';
+import { useHistory } from 'react-router-dom';
 
-import { Category, isType } from '../types';
+import { Category, ClientArticle, ClientRoutes, isType } from '../types';
 import { articlesApi } from '../api';
 import { useClientContext } from '../providers/ClientProvider';
 
 const ContentsPage = () => {
+  const history = useHistory();
   const { data: contents } = useQuery([articlesApi.name, {}], articlesApi.get);
   // const { data: contents } = useQuery([sheiltasApi.name, {}], sheiltasApi.get);
-  const { locale } = useClientContext();
+  const { locale, user, setSelectedEdit } = useClientContext();
+
+  const handleEdit = (content: ClientArticle) => () => {
+    setSelectedEdit(content);
+    history.push(ClientRoutes.EDITOR_ARTICLE);
+  };
 
   return (
     <Grid>
@@ -26,7 +34,7 @@ const ContentsPage = () => {
             updatedAt
           } = content;
 
-          const { fullName } = author;
+          const { fullName, _id: authorId } = author;
 
           const date = new Date(updatedAt.toString());
           const dateText = `${date.getDate()}/${
@@ -37,8 +45,21 @@ const ContentsPage = () => {
             isType<Category>(category, 'name') && (
               <Grid key={title}>
                 <Grid container alignItems="baseline">
-                  <Typography variant="h2">{title}</Typography>
-                  <Typography variant="subtitle1">{`| ${dateText}`}</Typography>
+                  <Grid item xs>
+                    <Typography variant="h2">{title}</Typography>
+                    <Typography variant="subtitle1">{`| ${dateText}`}</Typography>
+                  </Grid>
+                  {authorId === user._id && (
+                    <Grid container item xs justify="flex-end">
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={handleEdit(content)}
+                      >
+                        {locale.edit}
+                      </Button>
+                    </Grid>
+                  )}
                 </Grid>
                 <Typography variant="subtitle1">
                   {`${locale.category}: ${locale[category.name.key]}`}
