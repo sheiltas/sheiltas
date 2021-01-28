@@ -3,7 +3,8 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import LoginPage from './pages/Login';
 import EditorPage from './pages/Editor';
 import PrivateRoute from './pages/PrivateRoute';
-import ContentsPage from './pages/Contents';
+import ArticlesPage from './pages/Articles';
+import SheiltasPage from './pages/Sheiltas';
 import ArticleForm from './components/ArticleForm';
 import SheiltaForm from './components/SheiltaForm';
 import PageTemplate from './pages/PageTemplate';
@@ -24,7 +25,7 @@ const Router = () => (
             data={{
               titleKey: 'editorPageTitle',
               toPageKey: 'toContentsPage',
-              link: ClientRoutes.CONTENTS
+              link: ClientRoutes.ARTICLES
             }}
           />
         </PrivateRoute>
@@ -35,13 +36,17 @@ const Router = () => (
             data={{
               titleKey: 'editorSheiltaPageTitle',
               toPageKey: 'toSheiltasPage',
-              link: ClientRoutes.CONTENTS
+              link: ClientRoutes.SHEILTAS
             }}
           />
         </PrivateRoute>
 
-        <PrivateRoute path={ClientRoutes.CONTENTS}>
-          <ContentsPage />
+        <PrivateRoute path={ClientRoutes.ARTICLES}>
+          <ArticlesPage />
+        </PrivateRoute>
+
+        <PrivateRoute path={ClientRoutes.SHEILTAS}>
+          <SheiltasPage />
         </PrivateRoute>
       </PageTemplate>
     </Switch>

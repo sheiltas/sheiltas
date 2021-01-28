@@ -113,7 +113,8 @@ export enum ClientRoutes {
   ROOT = '/',
   EDITOR_ARTICLE = '/editor/article',
   EDITOR_SHEILTA = '/editor/sheilta',
-  CONTENTS = '/contents'
+  ARTICLES = '/articles',
+  SHEILTAS = '/sheiltas'
 }
 
 interface SchemaTimestampsConfig {

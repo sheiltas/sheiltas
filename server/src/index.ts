@@ -55,11 +55,12 @@ app.listen(port, async () => {
         await mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true });
         console.log('Connected to DB', isProduction ? '' : dbUrl);
 
-        // if (!isProduction) {
-        await initDB();
-        // }
-
-        await updateLocals();
+        if (!isProduction) {
+            const initiated = await initDB();
+            if (!initiated) {
+                await updateLocals();
+            }
+        }
 
         // initSheiltas();
     } catch (e) {

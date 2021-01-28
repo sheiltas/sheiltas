@@ -25,6 +25,7 @@
     "article":  "מאמר",
     "title": "כותרת",
     "loginError": "שם משתמש או סיסמא שגויים",
+    "edit": "ערוך",
 
     "aroundTheYear": "במעגל השנה",
     "destructionToSalvation": "מחורבן לגאולה",
@@ -230,6 +231,7 @@
     "article":  "Article",
     "title": "Title",
     "loginError": "Username or password are incorrect",
+    "edit": "Edit",
 
     "aroundTheYear": "במעגל השנה",
     "destructionToSalvation": "מחורבן לגאולה",

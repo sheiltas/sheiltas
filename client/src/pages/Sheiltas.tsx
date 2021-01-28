@@ -6,19 +6,17 @@ import Button from '@material-ui/core/Button';
 import { useQuery } from 'react-query';
 import { useHistory } from 'react-router-dom';
 
-import { Category, ClientArticle, ClientRoutes, isType } from '../types';
-import { articlesApi } from '../api';
+import { Category, ClientRoutes, ClientSheilta, isType } from '../types';
+import { sheiltasApi } from '../api';
 import { useClientContext } from '../providers/ClientProvider';
 
-const ContentsPage = () => {
+const Sheiltas = () => {
   const history = useHistory();
-  const { data: contents } = useQuery([articlesApi.name, {}], articlesApi.get);
-  // const { data: contents } = useQuery([sheiltasApi.name, {}], sheiltasApi.get);
+  const { data: contents } = useQuery([sheiltasApi.name, {}], sheiltasApi.get);
   const { locale, user, setSelectedEdit } = useClientContext();
-
-  const handleEdit = (content: ClientArticle) => () => {
+  const handleEdit = (content: ClientSheilta) => () => {
     setSelectedEdit(content);
-    history.push(ClientRoutes.EDITOR_ARTICLE);
+    history.push(ClientRoutes.EDITOR_SHEILTA);
   };
 
   return (
@@ -28,13 +26,14 @@ const ContentsPage = () => {
           const {
             author,
             title,
-            content: textContent,
             category,
             subcategory,
+            question,
+            answer,
             updatedAt
           } = content;
 
-          const { fullName, _id: authorId } = author;
+          const { fullName, _id: authorId } = author || {};
 
           const date = new Date(updatedAt.toString());
           const dateText = `${date.getDate()}/${
@@ -45,9 +44,15 @@ const ContentsPage = () => {
             isType<Category>(category, 'name') && (
               <Grid key={title}>
                 <Grid container alignItems="baseline">
-                  <Grid item xs>
-                    <Typography variant="h2">{title}</Typography>
-                    <Typography variant="subtitle1">{`| ${dateText}`}</Typography>
+                  <Grid container item xs alignItems="baseline" spacing={1}>
+                    <Grid item>
+                      <Typography variant="h2">{title}</Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="subtitle1">
+                        {` | ${dateText}`}
+                      </Typography>
+                    </Grid>
                   </Grid>
                   {authorId === user._id && (
                     <Grid container item xs justify="flex-end">
@@ -69,10 +74,15 @@ const ContentsPage = () => {
                     {`${locale.subcategory}: ${locale[subcategory.name.key]}`}
                   </Typography>
                 )}
-                <Typography variant="subtitle1">
-                  {`${locale.author}: ${fullName}`}
-                </Typography>
-                <Typography>{textContent}</Typography>
+                {fullName && (
+                  <Typography variant="subtitle1">
+                    {`${locale.author}: ${fullName}`}
+                  </Typography>
+                )}
+                <Typography variant="h6">{locale.question}</Typography>
+                <Typography>{question}</Typography>
+                <Typography variant="h6">{locale.answer}</Typography>
+                <Typography>{answer}</Typography>
               </Grid>
             )
           );
@@ -81,4 +91,4 @@ const ContentsPage = () => {
   );
 };
 
-export default memo(ContentsPage);
+export default memo(Sheiltas);

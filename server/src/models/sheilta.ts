@@ -2,6 +2,7 @@ import { model, SchemaTimestampsConfig, Document, SchemaTypeOpts, Schema } from 
 import { Sheilta } from '../../../client/src/types';
 import CategoryModel from './category';
 import SubcategoryModel from './subcategory';
+import UserModel from './users';
 
 export type SheiltaDocument = Sheilta & Document;
 
@@ -9,7 +10,12 @@ const sheiltaSchemaObj: Record<
     keyof Omit<Sheilta, '_id' | keyof SchemaTimestampsConfig>,
     SchemaTypeOpts<any>
 > = {
-    author: { type: String, required: true },
+    author: {
+        type: Schema.Types.ObjectId,
+        ref: UserModel,
+        index: true,
+        required: true
+    },
     question: { type: String, required: true },
     answer: { type: String, required: true },
     title: { type: String, required: true },

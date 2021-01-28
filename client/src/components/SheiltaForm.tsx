@@ -11,7 +11,7 @@ import Typography from '@material-ui/core/Typography';
 
 import { sheiltasApi, categoriesApi } from '../api';
 import { useClientContext } from '../providers/ClientProvider';
-import { isType, Sheilta } from '../types';
+import { ClientSheilta, isType, Sheilta } from '../types';
 import Select from './Select';
 
 type SelectValues = 'category' | 'subcategory';
@@ -135,17 +135,26 @@ const FormikForm = memo(() => {
 });
 
 const SheiltaForm = () => {
-  const { locale } = useClientContext();
+  const { locale, selectedEdit, setSelectedEdit } = useClientContext();
 
   const initialValues: FormikValues = useMemo(
-    () => ({
-      title: '',
-      category: '',
-      subcategory: '',
-      answer: '',
-      question: ''
-    }),
-    []
+    () =>
+      isType<ClientSheilta>(selectedEdit, ['title', 'question'])
+        ? {
+            title: selectedEdit.title,
+            category: selectedEdit.category._id,
+            subcategory: selectedEdit.subcategory._id,
+            answer: selectedEdit.answer,
+            question: selectedEdit.question
+          }
+        : {
+            title: '',
+            category: '',
+            subcategory: '',
+            answer: '',
+            question: ''
+          },
+    [selectedEdit]
   );
 
   const validate = useCallback(
@@ -154,7 +163,6 @@ const SheiltaForm = () => {
         if (!value && key !== 'subcategory') {
           acc[key] = locale.requiredField;
         }
-        console.log('acc', acc);
         return acc;
       }, {} as Record<string, string>),
     [locale.requiredField]
@@ -162,11 +170,14 @@ const SheiltaForm = () => {
 
   const onSubmit = useCallback(
     async (values: FormikValues) => {
-      console.log('values', values);
       if (
         isType<Omit<Sheilta, '_id'>>(values, ['question', 'answer', 'category'])
       ) {
-        const res = await sheiltasApi.post(values);
+        const res = isType<ClientSheilta>(selectedEdit, ['title', 'question'])
+          ? await sheiltasApi.put({ ...values, _id: selectedEdit._id })
+          : await sheiltasApi.post(values);
+
+        setSelectedEdit(null);
         alert(
           typeof res !== 'string'
             ? locale.sheiltaAddedSuccessfully
@@ -174,7 +185,12 @@ const SheiltaForm = () => {
         );
       }
     },
-    [locale.sheiltaAddedSuccessfully, locale.serverError]
+    [
+      selectedEdit,
+      setSelectedEdit,
+      locale.sheiltaAddedSuccessfully,
+      locale.serverError
+    ]
   );
 
   return (

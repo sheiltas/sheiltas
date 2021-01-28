@@ -33,14 +33,11 @@ const EditorPage = (props: Props) => {
       <Box className={classes.paper} component={Paper} width="100%" mx={2}>
         <Grid container alignItems="center" justify="space-between">
           <Typography>{`${locale[titleKey]}:`}</Typography>
-          {/* TODO remove when sheiltas page config is decided */}
-          {toPageKey !== 'toSheiltasPage' && (
-            <Button variant="contained" color="primary">
-              <Link to={link}>
-                <Typography>{locale[toPageKey]}</Typography>
-              </Link>
-            </Button>
-          )}
+          <Button variant="contained" color="primary">
+            <Link to={link}>
+              <Typography>{locale[toPageKey]}</Typography>
+            </Link>
+          </Button>
         </Grid>
         <Form />
       </Box>
