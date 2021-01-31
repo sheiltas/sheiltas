@@ -1,13 +1,14 @@
 import * as express from 'express';
 import { Document, Error, Model } from 'mongoose';
 import { Request, RequestHandler, Response } from 'express';
-import { methods } from '../../../client/src/types';
+import { Methods } from '../../../client/src/types';
 
-type apiFunction = (req: Request, res: Response) => Promise<void>;
+type apiFunction = (req: Request, res: Response) => Promise<void | Response<any>>;
 
 type handleErrorFunction = (res: Response, error: Error, options?: { status: number }) => void;
 
 export const handleError: handleErrorFunction = (res, error, options = { status: 500 }) => {
+    console.error('Error: ', Error);
     const { status } = options;
     res.status(status).send(error);
 };
@@ -32,24 +33,39 @@ export const tryCatchHandler = async (
     try {
         await tryFunc(req, res);
     } catch (e) {
-        console.log(e);
-
         const { errStatus } = options;
         handleError(res, e, { status: errStatus });
     }
 };
 
+/**
+ *
+ * @param routeName
+ * The url of the route
+ * @param model
+ * A mongoose model
+ * @param options
+ * options to change the default routes created
+ * @param options.middleware
+ * Single or array of middlewares to happen before the main operation
+ * @param options.exclude
+ * Array of REST methods
+ * @param options.overrides
+ * REST keys - RequestHandler functions to override the base methods (Good for population)
+ */
 const createRoutes = function <T extends Document>(
     routeName: string,
     model: Model<T>,
     options: {
         middleware?: Array<RequestHandler> | RequestHandler;
-        exclude?: Array<methods>;
+        exclude?: Array<Methods>;
+        overrides?: Partial<Record<Methods, apiFunction>>;
     } = {
-        exclude: []
+        exclude: [],
+        overrides: {}
     }
 ) {
-    const { middleware, exclude = [] } = options;
+    const { middleware, exclude = [], overrides = {} } = options;
     const baseUrl = `/${routeName}`;
     const router = express.Router();
 
@@ -74,22 +90,29 @@ const createRoutes = function <T extends Document>(
 
     if (!exclude.includes('get')) {
         router.get(baseUrl, async (req, res) => {
-            await tryCatchHandler(getFunction, req, res);
+            await tryCatchHandler(overrides.get || getFunction, req, res);
         });
     }
 
     if (!exclude.includes('post')) {
-        router.post(baseUrl, async (req, res) => await tryCatchHandler(postFunction, req, res));
+        router.post(
+            baseUrl,
+            async (req, res) => await tryCatchHandler(overrides.post || postFunction, req, res)
+        );
     }
 
     if (!exclude.includes('delete')) {
-        router.delete(baseUrl, async (req, res) => await tryCatchHandler(deleteFunc, req, res));
+        router.delete(
+            baseUrl,
+            async (req, res) => await tryCatchHandler(overrides.delete || deleteFunc, req, res)
+        );
     }
 
     if (!exclude.includes('put')) {
         router.put(
             baseUrl,
-            async (req, res) => await tryCatchHandler(putFunction, req, res, { errStatus: 304 })
+            async (req, res) =>
+                await tryCatchHandler(overrides.put || putFunction, req, res, { errStatus: 304 })
         );
     }
 

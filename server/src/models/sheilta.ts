@@ -1,15 +1,8 @@
-import { model, SchemaTimestampsConfig, ObjectId, Document, SchemaTypeOpts, Schema } from 'mongoose';
-import { categoriesKeys, subcategoriesHebrew } from '../../../client/src/types';
-
-export interface Sheilta extends SchemaTimestampsConfig {
-    _id: ObjectId | string;
-    author?: string;
-    title: string;
-    question: string;
-    answer: string;
-    category: categoriesKeys;
-    subcategory: subcategoriesHebrew;
-}
+import { model, SchemaTimestampsConfig, Document, SchemaTypeOpts, Schema } from 'mongoose';
+import { Sheilta } from '../../../client/src/types';
+import CategoryModel from './category';
+import SubcategoryModel from './subcategory';
+import UserModel from './users';
 
 export type SheiltaDocument = Sheilta & Document;
 
@@ -17,13 +10,19 @@ const sheiltaSchemaObj: Record<
     keyof Omit<Sheilta, '_id' | keyof SchemaTimestampsConfig>,
     SchemaTypeOpts<any>
 > = {
-    author: { type: String, required: true },
+    author: {
+        type: Schema.Types.ObjectId,
+        ref: UserModel,
+        index: true,
+        required: true
+    },
     question: { type: String, required: true },
     answer: { type: String, required: true },
     title: { type: String, required: true },
-    category: { type: String, required: true },
+    category: { type: Schema.Types.ObjectId, ref: CategoryModel, required: true },
     subcategory: {
-        type: String
+        type: Schema.Types.ObjectId,
+        ref: SubcategoryModel
         // Should be required when all categories have subcategories
         // required: true
     }

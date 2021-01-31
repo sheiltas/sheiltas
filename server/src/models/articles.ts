@@ -1,14 +1,8 @@
-import { Document, model, Schema, SchemaTypeOpts, SchemaTimestampsConfig, ObjectId } from 'mongoose';
-import { categoriesKeys, subcategoriesHebrew } from '../../../client/src/types';
-import UserModel, { User } from './users';
-
-export interface Article extends SchemaTimestampsConfig {
-    _id: ObjectId | string;
-    author: ObjectId | User;
-    content: string;
-    category: categoriesKeys;
-    subcategory: subcategoriesHebrew;
-}
+import { Document, model, Schema, SchemaTypeOpts, SchemaTimestampsConfig } from 'mongoose';
+import UserModel from './users';
+import { Article } from '../../../client/src/types';
+import CategoryModel from './category';
+import SubcategoryModel from './subcategory';
 
 export type ArticleDocument = Article & Document;
 
@@ -22,18 +16,23 @@ const articleSchemaObj: Record<
         index: true,
         required: true
     },
+    title: {
+        type: String,
+        required: true
+    },
     content: {
         type: String,
         required: true
     },
-    category: { type: String, required: true },
+    category: { type: Schema.Types.ObjectId, ref: CategoryModel, required: true },
     subcategory: {
-        type: String
-        // required: true
+        type: Schema.Types.ObjectId,
+        ref: SubcategoryModel
+        // required: true - should be true when all categories will have subcategories
     }
 };
 
-const ArticleSchema: Schema = new Schema(articleSchemaObj);
+const ArticleSchema: Schema = new Schema(articleSchemaObj, { timestamps: true });
 
 const ArticleModel = model<ArticleDocument>('articles', ArticleSchema);
 

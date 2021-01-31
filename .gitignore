@@ -247,5 +247,8 @@ fabric.properties
 
 # End of https://www.toptal.com/developers/gitignore/api/webstorm,node,macos
 
+server/app.yaml
+server/app-dev.yaml
 
-app.yaml
+server/build/
+server/resources/initSheiltas.json
