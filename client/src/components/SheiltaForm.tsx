@@ -13,6 +13,7 @@ import { sheiltasApi, categoriesApi } from '../api';
 import { useClientContext } from '../providers/ClientProvider';
 import { ClientSheilta, isType, Sheilta } from '../types';
 import Select from './Select';
+import useGet from '../hooks/api/useGet';
 
 type SelectValues = 'category' | 'subcategory';
 
@@ -46,10 +47,7 @@ const FormikForm = memo(() => {
 
   const mapKeyToOption = useMapKeyToOption();
 
-  const { data: categoriesData } = useQuery(
-    categoriesApi.name,
-    categoriesApi.get
-  );
+  const { data: categoriesData } = useGet(categoriesApi);
 
   const categoriesOptions = useMemo(
     () => [

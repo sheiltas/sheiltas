@@ -76,6 +76,39 @@ export interface ClientSheilta extends SchemaTimestampsConfig {
   subcategory: ClientSubcategory;
 }
 
+interface SchemaTimestampsConfig {
+  createdAt: boolean | string;
+  updatedAt: boolean | string;
+  currentTime?: () => Date | number;
+}
+
+export interface ChildrenProps {
+  children: ReactNode;
+}
+
+export interface LoginObj {
+  username: string;
+  password: string;
+}
+
+export interface AuthData {
+  fullName: string;
+  username: string;
+  _id: string;
+}
+
+export interface SelectOption {
+  name: string;
+  value: string;
+}
+
+export interface Api<T, GetOverride = T> {
+  name: Routes;
+  get: (params: unknown) => Promise<GetOverride[]>;
+  post: (body: Omit<T, '_id'>) => Promise<T | string>;
+  put: (body: T) => Promise<T | string>;
+}
+
 // Type guards
 // eslint-disable-next-line
 export function isType<T>(obj: T | any, keys: string | string[]): obj is T {
@@ -113,27 +146,7 @@ export enum ClientRoutes {
   ROOT = '/',
   EDITOR_ARTICLE = '/editor/article',
   EDITOR_SHEILTA = '/editor/sheilta',
+  EDITOR_CATEGORIES = '/editor/categories',
   ARTICLES = '/articles',
   SHEILTAS = '/sheiltas'
-}
-
-interface SchemaTimestampsConfig {
-  createdAt: boolean | string;
-  updatedAt: boolean | string;
-  currentTime?: () => Date | number;
-}
-
-export interface ChildrenProps {
-  children: ReactNode;
-}
-
-export interface LoginObj {
-  username: string;
-  password: string;
-}
-
-export interface AuthData {
-  fullName: string;
-  username: string;
-  _id: string;
 }

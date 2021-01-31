@@ -8,7 +8,8 @@ import {
   LoginObj,
   Methods,
   Routes,
-  Sheilta
+  Sheilta,
+  Api
 } from './types';
 
 const baseURL =
@@ -67,11 +68,11 @@ function createApi<T, GetOverride = T>(
       put: false
     }
   }
-) {
+): Api<T, GetOverride> {
   const { publicApi } = options;
   return {
     name: apiName,
-    get: async (params: unknown): Promise<GetOverride[]> => {
+    get: async (params) => {
       try {
         if (!publicApi.get) {
           addToken(axiosInstance);
@@ -81,7 +82,7 @@ function createApi<T, GetOverride = T>(
         return e;
       }
     },
-    post: async (body: Omit<T, '_id'>): Promise<T | string> => {
+    post: async (body) => {
       try {
         if (!publicApi.post) {
           addToken(axiosInstance);
@@ -91,7 +92,7 @@ function createApi<T, GetOverride = T>(
         return e;
       }
     },
-    put: async (body: T): Promise<T | string> => {
+    put: async (body) => {
       try {
         if (!publicApi.put) {
           addToken(axiosInstance);
