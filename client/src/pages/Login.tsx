@@ -36,7 +36,6 @@ const LoginPage = () => {
   const history = useHistory();
   const [error, toggleError] = useState(false);
   const { locale, login } = useClientContext();
-
   const onSubmit = useCallback(
     async (values) => {
       const loginRes = await login(values);
