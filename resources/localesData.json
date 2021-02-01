@@ -27,6 +27,9 @@
     "title": "כותרת",
     "loginError": "שם משתמש או סיסמא שגויים",
     "edit": "ערוך",
+    "update": "עדכן",
+    "newF": "חדשה",
+    "save": "שמור",
 
     "aroundTheYear": "במעגל השנה",
     "destructionToSalvation": "מחורבן לגאולה",
@@ -234,6 +237,9 @@
     "title": "Title",
     "loginError": "Username or password are incorrect",
     "edit": "Edit",
+    "update": "Update",
+    "newF": "New",
+    "save": "Save",
 
     "aroundTheYear": "במעגל השנה",
     "destructionToSalvation": "מחורבן לגאולה",
