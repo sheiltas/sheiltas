@@ -97,7 +97,7 @@ function createApi<T, GetOverride = T>(
         if (!publicApi.put) {
           addToken(axiosInstance);
         }
-        return await axiosInstance.put(`/${apiName}`, body);
+        return (await axiosInstance.put(`/${apiName}`, body)).data;
       } catch (e) {
         return e;
       }

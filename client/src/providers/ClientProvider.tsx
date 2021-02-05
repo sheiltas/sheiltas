@@ -43,6 +43,9 @@ interface IClientProviderContext {
   setSelectedEdit: Dispatch<
     SetStateAction<ClientArticle | ClientSheilta | null>
   >;
+  setLocalsData: Dispatch<
+    SetStateAction<Record<Languages, Record<string, string>>>
+  >;
 }
 
 const Context = createContext<IClientProviderContext>({
@@ -53,7 +56,8 @@ const Context = createContext<IClientProviderContext>({
   user: { fullName: '', username: '', _id: '' },
   isAuthorized: false,
   selectedEdit: null,
-  setSelectedEdit: () => undefined
+  setSelectedEdit: () => undefined,
+  setLocalsData: () => undefined
 });
 
 const ClientProvider = (props: ChildrenProps) => {
@@ -147,7 +151,8 @@ const ClientProvider = (props: ChildrenProps) => {
         user,
         isAuthorized,
         selectedEdit,
-        setSelectedEdit
+        setSelectedEdit,
+        setLocalsData
       }}
     >
       {children}

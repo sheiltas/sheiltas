@@ -1,4 +1,4 @@
-import React, { lazy, memo, ReactNode, Suspense } from 'react';
+import React, { FC, lazy, memo, ReactNode, Suspense } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import PrivateRoute from './pages/PrivateRoute';
 import PageTemplate from './pages/PageTemplate';
@@ -65,18 +65,20 @@ const privateRoutes: RouteType[] = [
 ];
 
 const Router = () => (
-  <Suspense fallback={() => <>Loading...</>}>
+  <Suspense fallback={<>Loading...</>}>
     <BrowserRouter>
       <Switch>
         <PageTemplate>
           {publicRoutes.map(({ path, exact = false, page }) => (
-            <Route path={path} exact={exact}>
+            <Route path={path} exact={exact} key={path}>
               {page}
             </Route>
           ))}
 
           {privateRoutes.map(({ path, page }) => (
-            <PrivateRoute path={path}>{page}</PrivateRoute>
+            <PrivateRoute path={path} key={path}>
+              {page}
+            </PrivateRoute>
           ))}
         </PageTemplate>
       </Switch>

@@ -52,7 +52,11 @@ app.listen(port, async () => {
     console.log(`Server is running on port ${port}`);
 
     try {
-        await mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true });
+        await mongoose.connect(dbUrl, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            useFindAndModify: false
+        });
         console.log('Connected to DB', isProduction ? '' : dbUrl);
 
         // if (!isProduction) {

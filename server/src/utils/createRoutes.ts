@@ -85,8 +85,10 @@ const createRoutes = function <T extends Document>(
     const deleteFunc = async (req: Request, res: Response) =>
         handleSuccess<T>(res, await model.findOneAndDelete(req.body));
 
-    const putFunction = async (req: Request, res: Response) =>
-        handleSuccess<T>(res, await model.findOneAndUpdate(req.body));
+    const putFunction = async (req: Request, res: Response) => {
+        console.log('req.body', req.body);
+        handleSuccess<T>(res, await model.findOneAndUpdate({ _id: req.body._id }, req.body, { new: true }));
+    };
 
     if (!exclude.includes('get')) {
         router.get(baseUrl, async (req, res) => {

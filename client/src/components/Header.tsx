@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useState } from 'react';
+import React, { memo, useState } from 'react';
 import Typography from '@material-ui/core/Typography';
 import AppBar from '@material-ui/core/AppBar';
 import makeStyles from '@material-ui/core/styles/makeStyles';
@@ -62,6 +62,7 @@ const Header = () => {
       <Drawer anchor="left" open={open} onClose={toggleOpen}>
         {listItems.map(({ path, listItemText }) => (
           <ListItem
+            key={path}
             path={path}
             clickHandler={goTo}
             listItemText={locale[listItemText]}

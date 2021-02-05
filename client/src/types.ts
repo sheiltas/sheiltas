@@ -106,7 +106,7 @@ export interface Api<T, GetOverride = T> {
   name: Routes;
   get: (params: unknown) => Promise<GetOverride[]>;
   post: (body: Omit<T, '_id'>) => Promise<T | string>;
-  put: (body: T) => Promise<T | string>;
+  put: (body: Partial<T>) => Promise<T | string>;
 }
 
 // Type guards
