@@ -54,6 +54,7 @@ const EditorRow = memo((props: EditorRowProps) => {
     handleUpdate
   } = props;
   const { locale } = useClientContext();
+
   return (
     <Grid container item>
       <Grid item xs>
@@ -143,11 +144,22 @@ const CategoriesEditor: FC = () => {
   const { mutate: putLocale } = useMutation(localesApi.put, {
     onSuccess: (data) => {
       if (isType<Locale>(data, 'translation')) {
-        setLocalsData((prevState) => {
-          // eslint-disable-next-line no-param-reassign
-          prevState.he[selectedCategoryLocaleKey] = data.translation.he;
-          return prevState;
-        });
+        setLocalsData((prevState) =>
+          Object.entries(prevState).reduce((acc, [language, localeData]) => {
+            acc[language] = Object.entries(localeData).reduce(
+              (innerAcc, [localeKey, localeValue]) => {
+                // eslint-disable-next-line no-param-reassign
+                innerAcc[localeKey] =
+                  localeKey === selectedCategoryLocaleKey
+                    ? data.translation.he
+                    : localeValue;
+                return innerAcc;
+              },
+              {} as any
+            );
+            return acc;
+          }, {} as any)
+        );
         setEditValue('');
         setSelectedLocaleEdit({ _id: '', key: '' });
         setEditType('');
