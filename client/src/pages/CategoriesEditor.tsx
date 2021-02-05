@@ -37,7 +37,7 @@ interface EditorRowProps {
   };
   selectedCategoryLocaleKey: string;
   handleCategoryChange: (e: any) => void;
-  handleEditClick: (value: 'category' | 'subcategory' | '') => () => void;
+  handleEditClick: () => void;
   handleUpdate: () => void;
 }
 
@@ -58,7 +58,7 @@ const EditorRow = memo((props: EditorRowProps) => {
   return (
     <Grid container item>
       <Grid item xs>
-        {editType === 'category' ? (
+        {editType === label ? (
           <TextField
             fullWidth
             label={locale[label]}
@@ -74,6 +74,9 @@ const EditorRow = memo((props: EditorRowProps) => {
             <Select
               value={selectedCategoryLocaleKey}
               onChange={handleCategoryChange}
+              MenuProps={{
+                disablePortal: true
+              }}
             >
               {categoriesLocalesOptions.options.map(({ name, value }) => (
                 <MenuItem value={value} key={value}>
@@ -87,7 +90,7 @@ const EditorRow = memo((props: EditorRowProps) => {
 
       <Grid container item xs justify="center">
         <Button
-          onClick={handleEditClick('category')}
+          onClick={handleEditClick}
           variant="contained"
           color="secondary"
           disabled={!selectedCategoryLocaleKey || !!editValue}
@@ -97,7 +100,7 @@ const EditorRow = memo((props: EditorRowProps) => {
 
         <Button
           onClick={handleUpdate}
-          disabled={editType !== 'category'}
+          disabled={editType !== label}
           variant="contained"
           color="secondary"
         >
@@ -128,29 +131,69 @@ const CategoriesEditor: FC = () => {
   const [selectedCategoryLocaleKey, setSelectedCategoryLocaleKey] = useState(
     ''
   );
+  const [
+    selectedSubcategoryLocaleKey,
+    setSelectedSubcategoryLocaleKey
+  ] = useState('');
 
   const handleEditClick = (value: SelectValues | '') => () => {
-    const curEditLocale = categoriesData?.find?.(
-      (curCategory) => curCategory.name.key === selectedCategoryLocaleKey
-    )?.name || { _id: '', key: '' };
-    setEditValue(locale[selectedCategoryLocaleKey]);
-    setSelectedLocaleEdit(curEditLocale);
+    // eslint-disable-next-line
+    // debugger;
+    let localeKey: string;
+    let editLocale: { _id: string; key: string };
+    // eslint-disable-next-line default-case
+    switch (value) {
+      case 'category':
+        localeKey = selectedCategoryLocaleKey;
+        editLocale = categoriesData?.find?.(
+          (curCategory) => curCategory.name.key === localeKey
+        )?.name || { _id: '', key: '' };
+        break;
+      case 'subcategory':
+        localeKey = selectedSubcategoryLocaleKey;
+        editLocale = categoriesData
+          ?.find?.(
+            (curCategory) => curCategory.name.key === selectedCategoryLocaleKey
+          )
+          ?.subcategories.find(
+            (subcategory) =>
+              subcategory.name.key === selectedSubcategoryLocaleKey
+          )?.name || { _id: '', key: '' };
+        break;
+      default:
+        localeKey = '';
+        editLocale = { _id: '', key: '' };
+    }
+    setEditValue(locale[localeKey]);
+    setSelectedLocaleEdit(editLocale);
     setEditType(value);
   };
 
-  const handleCategoryChange = (e: any) =>
-    setSelectedCategoryLocaleKey(e.target.value);
+  const handleSelectChange = (changeValue: SelectValues) => (e: any) => {
+    const changeFunc =
+      changeValue === 'category'
+        ? setSelectedCategoryLocaleKey
+        : setSelectedSubcategoryLocaleKey;
+    changeFunc(e.target.value);
+    if (changeValue === 'category') {
+      setSelectedSubcategoryLocaleKey('');
+    }
+  };
 
   const { mutate: putLocale } = useMutation(localesApi.put, {
     onSuccess: (data) => {
       if (isType<Locale>(data, 'translation')) {
+        const compareLocaleKey =
+          editType === 'category'
+            ? selectedCategoryLocaleKey
+            : selectedSubcategoryLocaleKey;
         setLocalsData((prevState) =>
           Object.entries(prevState).reduce((acc, [language, localeData]) => {
             acc[language] = Object.entries(localeData).reduce(
               (innerAcc, [localeKey, localeValue]) => {
                 // eslint-disable-next-line no-param-reassign
                 innerAcc[localeKey] =
-                  localeKey === selectedCategoryLocaleKey
+                  localeKey === compareLocaleKey
                     ? data.translation.he
                     : localeValue;
                 return innerAcc;
@@ -195,7 +238,8 @@ const CategoriesEditor: FC = () => {
         options:
           categoriesData
             ?.find(
-              (categoryData) => categoryData._id === selectedCategoryLocaleKey
+              (categoryData) =>
+                categoryData.name.key === selectedCategoryLocaleKey
             )
             ?.subcategories.map(mapKeyToOption) || []
       }
@@ -218,10 +262,21 @@ const CategoriesEditor: FC = () => {
           categoriesLocalesOptions={categoriesLocalesOptions[0]}
           editType={editType}
           editValue={editValue}
-          handleCategoryChange={handleCategoryChange}
-          handleEditClick={handleEditClick}
+          handleCategoryChange={handleSelectChange('category')}
+          handleEditClick={handleEditClick('category')}
           handleUpdate={handleUpdate}
           selectedCategoryLocaleKey={selectedCategoryLocaleKey}
+        />
+        <EditorRow
+          editType={editType}
+          label="subcategory"
+          editValue={editValue}
+          handleTextFieldChange={handleTextFieldChange}
+          categoriesLocalesOptions={categoriesLocalesOptions[1]}
+          selectedCategoryLocaleKey={selectedSubcategoryLocaleKey}
+          handleCategoryChange={handleSelectChange('subcategory')}
+          handleEditClick={handleEditClick('subcategory')}
+          handleUpdate={handleUpdate}
         />
       </Grid>
     </Paper>
