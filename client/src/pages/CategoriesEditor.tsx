@@ -28,10 +28,31 @@ const createClasses = makeStyles((theme) => ({
 interface EditorRowProps {
   label: string;
   editType: SelectValues | '';
+  editValue: string;
+  handleTextFieldChange: StandardTextFieldProps['onChange'];
+  categoriesLocalesOptions: {
+    label: string;
+    name: SelectValues;
+    options: { name: string; value: string }[];
+  };
+  selectedCategoryLocaleKey: string;
+  handleCategoryChange: (e: any) => void;
+  handleEditClick: (value: 'category' | 'subcategory' | '') => () => void;
+  handleUpdate: () => void;
 }
 
-const EditorRow = (props: EditorRowProps) => {
-  const { label } = props;
+const EditorRow = memo((props: EditorRowProps) => {
+  const {
+    label,
+    editType,
+    editValue,
+    handleTextFieldChange,
+    categoriesLocalesOptions,
+    selectedCategoryLocaleKey,
+    handleCategoryChange,
+    handleEditClick,
+    handleUpdate
+  } = props;
   const { locale } = useClientContext();
   return (
     <Grid container item>
@@ -53,7 +74,7 @@ const EditorRow = (props: EditorRowProps) => {
               value={selectedCategoryLocaleKey}
               onChange={handleCategoryChange}
             >
-              {categoriesLocalesOptions[0].options.map(({ name, value }) => (
+              {categoriesLocalesOptions.options.map(({ name, value }) => (
                 <MenuItem value={value} key={value}>
                   <Typography>{name}</Typography>
                 </MenuItem>
@@ -84,7 +105,7 @@ const EditorRow = (props: EditorRowProps) => {
       </Grid>
     </Grid>
   );
-};
+});
 
 const CategoriesEditor: FC = () => {
   const classes = createClasses();
@@ -134,11 +155,12 @@ const CategoriesEditor: FC = () => {
     }
   });
 
-  const handleUpdate = () =>
+  const handleUpdate = () => {
     putLocale({
       _id: selectedLocaleEdit._id,
       translation: { he: editValue, en: editValue }
     });
+  };
 
   const mapKeyToOption = useCallback(
     (category: ClientCategory | ClientSubcategory) => ({
@@ -178,7 +200,17 @@ const CategoriesEditor: FC = () => {
   return (
     <Paper elevation={3} className={classes.paper}>
       <Grid container direction="column">
-        <EditorRow />
+        <EditorRow
+          handleTextFieldChange={handleTextFieldChange}
+          label="category"
+          categoriesLocalesOptions={categoriesLocalesOptions[0]}
+          editType={editType}
+          editValue={editValue}
+          handleCategoryChange={handleCategoryChange}
+          handleEditClick={handleEditClick}
+          handleUpdate={handleUpdate}
+          selectedCategoryLocaleKey={selectedCategoryLocaleKey}
+        />
       </Grid>
     </Paper>
   );
