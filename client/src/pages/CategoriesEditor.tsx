@@ -38,7 +38,10 @@ interface EditorRowProps {
   selectedCategoryLocaleKey: string;
   handleCategoryChange: (e: any) => void;
   handleEditClick: () => void;
-  handleUpdate: () => void;
+  handleUpload: () => void;
+  isNew: boolean;
+  handleNewClick: () => void;
+  newDisabled: boolean;
 }
 
 const EditorRow = memo((props: EditorRowProps) => {
@@ -51,7 +54,10 @@ const EditorRow = memo((props: EditorRowProps) => {
     selectedCategoryLocaleKey,
     handleCategoryChange,
     handleEditClick,
-    handleUpdate
+    handleUpload,
+    handleNewClick,
+    isNew,
+    newDisabled
   } = props;
   const { locale } = useClientContext();
 
@@ -89,23 +95,38 @@ const EditorRow = memo((props: EditorRowProps) => {
       </Grid>
 
       <Grid container item xs justify="center">
-        <Button
-          onClick={handleEditClick}
-          variant="contained"
-          color="secondary"
-          disabled={!selectedCategoryLocaleKey || !!editValue}
-        >
-          <Typography>{locale.edit}</Typography>
-        </Button>
+        <Grid item>
+          <Button
+            onClick={handleNewClick}
+            variant="contained"
+            color="secondary"
+            disabled={newDisabled}
+          >
+            <Typography>{locale.new}</Typography>
+          </Button>
+        </Grid>
 
-        <Button
-          onClick={handleUpdate}
-          disabled={editType !== label}
-          variant="contained"
-          color="secondary"
-        >
-          <Typography>{locale.update}</Typography>
-        </Button>
+        <Grid item>
+          <Button
+            onClick={handleEditClick}
+            variant="contained"
+            color="secondary"
+            disabled={!selectedCategoryLocaleKey || !!editValue || isNew}
+          >
+            <Typography>{locale.edit}</Typography>
+          </Button>
+        </Grid>
+
+        <Grid>
+          <Button
+            onClick={handleUpload}
+            disabled={editType !== label}
+            variant="contained"
+            color="secondary"
+          >
+            <Typography>{locale.upload}</Typography>
+          </Button>
+        </Grid>
       </Grid>
     </Grid>
   );
@@ -136,9 +157,18 @@ const CategoriesEditor: FC = () => {
     setSelectedSubcategoryLocaleKey
   ] = useState('');
 
+  const [isNew, setIsNew] = useState(false);
+
+  const handleNewClick = (type: SelectValues) => () => {
+    setIsNew(true);
+    setEditValue('');
+    setEditType(type);
+    return type === 'category'
+      ? setSelectedCategoryLocaleKey('')
+      : setSelectedSubcategoryLocaleKey('');
+  };
+
   const handleEditClick = (value: SelectValues | '') => () => {
-    // eslint-disable-next-line
-    // debugger;
     let localeKey: string;
     let editLocale: { _id: string; key: string };
     // eslint-disable-next-line default-case
@@ -210,7 +240,7 @@ const CategoriesEditor: FC = () => {
     }
   });
 
-  const handleUpdate = () => {
+  const handleUpload = () => {
     putLocale({
       _id: selectedLocaleEdit._id,
       translation: { he: editValue, en: editValue }
@@ -264,8 +294,11 @@ const CategoriesEditor: FC = () => {
           editValue={editValue}
           handleCategoryChange={handleSelectChange('category')}
           handleEditClick={handleEditClick('category')}
-          handleUpdate={handleUpdate}
+          handleUpload={handleUpload}
           selectedCategoryLocaleKey={selectedCategoryLocaleKey}
+          handleNewClick={handleNewClick('category')}
+          isNew={isNew}
+          newDisabled={isNew}
         />
         <EditorRow
           editType={editType}
@@ -276,7 +309,10 @@ const CategoriesEditor: FC = () => {
           selectedCategoryLocaleKey={selectedSubcategoryLocaleKey}
           handleCategoryChange={handleSelectChange('subcategory')}
           handleEditClick={handleEditClick('subcategory')}
-          handleUpdate={handleUpdate}
+          handleUpload={handleUpload}
+          handleNewClick={handleNewClick('subcategory')}
+          isNew={isNew}
+          newDisabled={isNew || !selectedCategoryLocaleKey}
         />
       </Grid>
     </Paper>
