@@ -1,5 +1,5 @@
 import * as express from 'express';
-import { Document, Error, Model } from 'mongoose';
+import { Document, Model } from 'mongoose';
 import { Request, RequestHandler, Response } from 'express';
 import { Methods } from '../../../client/src/types';
 
@@ -8,7 +8,7 @@ type apiFunction = (req: Request, res: Response) => Promise<void | Response<any>
 type handleErrorFunction = (res: Response, error: Error, options?: { status: number }) => void;
 
 export const handleError: handleErrorFunction = (res, error, options = { status: 500 }) => {
-    console.error('Error: ', Error);
+    console.error('Error: ', error);
     const { status } = options;
     res.status(status).send(error);
 };
@@ -85,8 +85,9 @@ const createRoutes = function <T extends Document>(
     const deleteFunc = async (req: Request, res: Response) =>
         handleSuccess<T>(res, await model.findOneAndDelete(req.body));
 
-    const putFunction = async (req: Request, res: Response) =>
-        handleSuccess<T>(res, await model.findOneAndUpdate(req.body));
+    const putFunction = async (req: Request, res: Response) => {
+        handleSuccess<T>(res, await model.findOneAndUpdate({ _id: req.body._id }, req.body, { new: true }));
+    };
 
     if (!exclude.includes('get')) {
         router.get(baseUrl, async (req, res) => {

@@ -7,7 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import Drawer from '@material-ui/core/Drawer';
 import IconButton from '@material-ui/core/IconButton';
 import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
-import ListItem from '@material-ui/core/ListItem';
+import MuiListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
 import { useHistory } from 'react-router-dom';
@@ -22,6 +22,28 @@ const createClasses = makeStyles((theme) => ({
     top: '0'
   }
 }));
+
+interface ListItemProps {
+  path: ClientRoutes;
+  clickHandler: (path: ClientRoutes) => (e: React.MouseEvent) => void;
+  listItemText: string;
+}
+
+const ListItem = memo((props: ListItemProps) => {
+  const { clickHandler, listItemText, path } = props;
+
+  return (
+    <MuiListItem button onClick={clickHandler(path)}>
+      <ListItemText>{listItemText}</ListItemText>
+    </MuiListItem>
+  );
+});
+
+const listItems: Array<Omit<ListItemProps, 'clickHandler'>> = [
+  { listItemText: 'sheilta', path: ClientRoutes.EDITOR_SHEILTA },
+  { listItemText: 'article', path: ClientRoutes.EDITOR_SHEILTA },
+  { listItemText: 'categories', path: ClientRoutes.EDITOR_CATEGORIES }
+];
 
 const Header = () => {
   const classes = createClasses();
@@ -38,12 +60,14 @@ const Header = () => {
       <Box height="130px" width="100%" />
 
       <Drawer anchor="left" open={open} onClose={toggleOpen}>
-        <ListItem button onClick={goTo(ClientRoutes.EDITOR_SHEILTA)}>
-          <ListItemText>{locale.sheilta}</ListItemText>
-        </ListItem>
-        <ListItem button onClick={goTo(ClientRoutes.EDITOR_ARTICLE)}>
-          <ListItemText>{locale.article}</ListItemText>
-        </ListItem>
+        {listItems.map(({ path, listItemText }) => (
+          <ListItem
+            key={path}
+            path={path}
+            clickHandler={goTo}
+            listItemText={locale[listItemText]}
+          />
+        ))}
       </Drawer>
 
       <AppBar position="fixed" className={classes.appBar}>

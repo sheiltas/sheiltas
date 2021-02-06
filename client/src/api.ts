@@ -8,7 +8,9 @@ import {
   LoginObj,
   Methods,
   Routes,
-  Sheilta
+  Sheilta,
+  Api,
+  ClientSubcategory
 } from './types';
 
 const baseURL =
@@ -67,11 +69,11 @@ function createApi<T, GetOverride = T>(
       put: false
     }
   }
-) {
+): Api<T, GetOverride> {
   const { publicApi } = options;
   return {
     name: apiName,
-    get: async (params: unknown): Promise<GetOverride[]> => {
+    get: async (params) => {
       try {
         if (!publicApi.get) {
           addToken(axiosInstance);
@@ -81,22 +83,22 @@ function createApi<T, GetOverride = T>(
         return e;
       }
     },
-    post: async (body: Omit<T, '_id'>): Promise<T | string> => {
+    post: async (body) => {
       try {
         if (!publicApi.post) {
           addToken(axiosInstance);
         }
-        return await axiosInstance.post(`/${apiName}`, body);
+        return (await axiosInstance.post(`/${apiName}`, body)).data;
       } catch (e) {
         return e;
       }
     },
-    put: async (body: T): Promise<T | string> => {
+    put: async (body) => {
       try {
         if (!publicApi.put) {
           addToken(axiosInstance);
         }
-        return await axiosInstance.put(`/${apiName}`, body);
+        return (await axiosInstance.put(`/${apiName}`, body)).data;
       } catch (e) {
         return e;
       }
@@ -116,4 +118,13 @@ const localesApi = createApi<Locale>(Routes.LOCALES, {
 
 const categoriesApi = createApi<ClientCategory>(Routes.CATEGORIES);
 
-export { authApi, articlesApi, localesApi, categoriesApi, sheiltasApi };
+const subcategoriesApi = createApi<ClientSubcategory>(Routes.SUBCATEGORIES);
+
+export {
+  authApi,
+  articlesApi,
+  localesApi,
+  categoriesApi,
+  sheiltasApi,
+  subcategoriesApi
+};

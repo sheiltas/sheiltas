@@ -13,6 +13,8 @@ import { articlesApi, categoriesApi } from '../api';
 import { useClientContext } from '../providers/ClientProvider';
 import { Article, ClientArticle, isType } from '../types';
 import Select from './Select';
+import useMapKeyToOption from '../hooks/useMapKeyToOption';
+import useGet from '../hooks/api/useGet';
 
 type SelectValues = 'category' | 'subcategory';
 
@@ -22,15 +24,6 @@ interface FormikValues {
   subcategory: string;
   content: string;
 }
-
-const useMapKeyToOption = () => {
-  const { locale } = useClientContext();
-
-  return (option: { _id: string; name: { key: string } }) => ({
-    value: option._id,
-    name: locale[option.name.key]
-  });
-};
 
 const FormikForm = memo(() => {
   const {
@@ -45,10 +38,7 @@ const FormikForm = memo(() => {
 
   const mapKeyToOption = useMapKeyToOption();
 
-  const { data: categoriesData } = useQuery(
-    categoriesApi.name,
-    categoriesApi.get
-  );
+  const { data: categoriesData } = useGet(categoriesApi);
 
   const categoriesOptions = useMemo(
     () => [

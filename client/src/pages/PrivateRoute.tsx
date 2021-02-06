@@ -4,7 +4,7 @@ import { ChildrenProps, ClientRoutes } from '../types';
 import { useClientContext } from '../providers/ClientProvider';
 
 interface Props extends ChildrenProps {
-  path: string;
+  path: ClientRoutes;
 }
 
 const PrivateRoute = (props: Props) => {

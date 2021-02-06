@@ -7,17 +7,13 @@ import MuiSelect from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import makeStyles from '@material-ui/core/styles/makeStyles';
+import { SelectOption } from '../types';
 
 const createClasses = makeStyles((theme) => ({
   input: {
     backgroundColor: theme.palette.background.default
   }
 }));
-
-interface SelectOption {
-  name: string;
-  value: string;
-}
 
 interface SelectProps<Name = string, U = SelectOption> {
   data: {
