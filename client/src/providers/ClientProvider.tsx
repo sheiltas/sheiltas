@@ -116,10 +116,10 @@ const ClientProvider = (props: ChildrenProps) => {
     }
   });
 
-  const locale = useMemo(() => {
-    console.log('restting locales');
-    return localesData[selectedLanguage];
-  }, [selectedLanguage, localesData]);
+  const locale = useMemo(() => localesData[selectedLanguage], [
+    selectedLanguage,
+    localesData
+  ]);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
