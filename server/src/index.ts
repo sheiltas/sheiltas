@@ -59,12 +59,12 @@ app.listen(port, async () => {
         });
         console.log('Connected to DB', isProduction ? '' : dbUrl);
 
-        // if (!isProduction) {
-        const initiated = await initDB();
-        if (!initiated) {
-            await updateLocals();
+        if (!isProduction) {
+            const initiated = await initDB();
+            if (!initiated) {
+                await updateLocals();
+            }
         }
-        // }
 
         // initSheiltas();
     } catch (e) {

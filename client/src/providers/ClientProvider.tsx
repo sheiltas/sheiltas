@@ -20,7 +20,7 @@ import {
   User
 } from '../types';
 import { authApi, localesApi } from '../api';
-import { languages as languagesArray } from '../utils';
+import { languages, languages as languagesArray } from '../utils';
 
 export const decodeJwt = (
   token: string
@@ -46,6 +46,7 @@ interface IClientProviderContext {
   setLocalsData: Dispatch<
     SetStateAction<Record<Languages, Record<string, string>>>
   >;
+  localesData: Record<Languages, Record<string, string>>;
 }
 
 const Context = createContext<IClientProviderContext>({
@@ -57,7 +58,11 @@ const Context = createContext<IClientProviderContext>({
   isAuthorized: false,
   selectedEdit: null,
   setSelectedEdit: () => undefined,
-  setLocalsData: () => undefined
+  setLocalsData: () => undefined,
+  localesData: {
+    he: {},
+    en: {}
+  }
 });
 
 const ClientProvider = (props: ChildrenProps) => {
@@ -111,10 +116,10 @@ const ClientProvider = (props: ChildrenProps) => {
     }
   });
 
-  const locale = useMemo(() => localesData[selectedLanguage], [
-    selectedLanguage,
-    localesData
-  ]);
+  const locale = useMemo(() => {
+    console.log('restting locales');
+    return localesData[selectedLanguage];
+  }, [selectedLanguage, localesData]);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -152,7 +157,8 @@ const ClientProvider = (props: ChildrenProps) => {
         isAuthorized,
         selectedEdit,
         setSelectedEdit,
-        setLocalsData
+        setLocalsData,
+        localesData
       }}
     >
       {children}

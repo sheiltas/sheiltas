@@ -11,9 +11,16 @@ import InputLabel from '@material-ui/core/InputLabel';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { useMutation } from 'react-query';
 import useGet from '../hooks/api/useGet';
-import { categoriesApi, localesApi } from '../api';
+import { categoriesApi, localesApi, subcategoriesApi } from '../api';
 import { useClientContext } from '../providers/ClientProvider';
-import { ClientCategory, ClientSubcategory, isType, Locale } from '../types';
+import {
+  ClientCategory,
+  ClientSubcategory,
+  isType,
+  Languages,
+  Locale
+} from '../types';
+import { languages } from '../utils';
 
 type SelectValues = 'category' | 'subcategory';
 
@@ -26,7 +33,7 @@ const createClasses = makeStyles((theme) => ({
 }));
 
 interface EditorRowProps {
-  label: string;
+  label: SelectValues;
   editType: SelectValues | '';
   editValue: string;
   handleTextFieldChange: StandardTextFieldProps['onChange'];
@@ -38,7 +45,7 @@ interface EditorRowProps {
   selectedCategoryLocaleKey: string;
   handleCategoryChange: (e: any) => void;
   handleEditClick: () => void;
-  handleUpload: () => void;
+  handleUpload: (type: SelectValues | 'update') => () => void;
   isNew: boolean;
   handleNewClick: () => void;
   newDisabled: boolean;
@@ -119,8 +126,8 @@ const EditorRow = memo((props: EditorRowProps) => {
 
         <Grid>
           <Button
-            onClick={handleUpload}
-            disabled={editType !== label}
+            onClick={handleUpload(isNew ? label : 'update')}
+            disabled={editType !== label || !editValue}
             variant="contained"
             color="secondary"
           >
@@ -134,8 +141,12 @@ const EditorRow = memo((props: EditorRowProps) => {
 
 const CategoriesEditor: FC = () => {
   const classes = createClasses();
-  const { locale, setLocalsData } = useClientContext();
-  const { data: categoriesData } = useGet(categoriesApi);
+  const { locale, setLocalsData, localesData } = useClientContext();
+  const [categoriesData, setCategoriesData] = useState<ClientCategory[]>([]);
+
+  useGet(categoriesApi, {
+    onSuccess: (data) => setCategoriesData(data)
+  });
 
   // To determine if a select field should transform into text field
   const [editType, setEditType] = useState<SelectValues | ''>('');
@@ -240,11 +251,106 @@ const CategoriesEditor: FC = () => {
     }
   });
 
-  const handleUpload = () => {
-    putLocale({
-      _id: selectedLocaleEdit._id,
-      translation: { he: editValue, en: editValue }
-    });
+  const { mutate: postCategory } = useMutation(categoriesApi.post as any, {
+    onSuccess: (data: [ClientCategory, Locale]) => {
+      const [categoryRes, localeRes] = data;
+      setCategoriesData(categoriesData.concat(categoryRes));
+
+      const newLocales = Object.entries(localesData).reduce(
+        (acc, [language, value]) => ({
+          ...acc,
+          [language]: Object.entries(value).reduce(
+            (innerAcc, [key, word]) => ({
+              ...innerAcc,
+              [key]: word
+            }),
+            {
+              [localeRes.key]: localeRes.translation[language as Languages]
+            }
+          )
+        }),
+        {
+          // TODO fix generic
+          he: {},
+          en: {}
+        }
+      );
+      setLocalsData(newLocales);
+      setSelectedCategoryLocaleKey(localeRes.key);
+      setEditType('');
+      setEditValue('');
+      setIsNew(false);
+    }
+  });
+
+  const { mutate: postSubcategory } = useMutation(
+    subcategoriesApi.post as any,
+    {
+      onSuccess: (data: [ClientSubcategory, Locale, ClientCategory]) => {
+        const [subcategoryRes, localeRes] = data;
+
+        const newCategories = categoriesData.map((category) => {
+          if (category.name.key === selectedCategoryLocaleKey) {
+            category.subcategories.push(subcategoryRes);
+          }
+          return category;
+        });
+        setCategoriesData(newCategories);
+
+        const newLocales = Object.entries(localesData).reduce(
+          (acc, [language, value]) => ({
+            ...acc,
+            [language]: Object.entries(value).reduce(
+              (innerAcc, [key, word]) => ({
+                ...innerAcc,
+                [key]: word
+              }),
+              {
+                [localeRes.key]: localeRes.translation[language as Languages]
+              }
+            )
+          }),
+          {
+            // TODO fix generic
+            he: {},
+            en: {}
+          }
+        );
+        setLocalsData(newLocales);
+
+        setSelectedSubcategoryLocaleKey(subcategoryRes.name.key);
+        setEditType('');
+        setEditValue('');
+        setIsNew(false);
+      }
+    }
+  );
+
+  const handleUpload = (type: SelectValues | 'update') => () => {
+    switch (type) {
+      case 'category':
+        // eslint-disable-next-line
+        // @ts-ignore
+        postCategory({ word: editValue });
+        break;
+      case 'subcategory':
+        // eslint-disable-next-line
+        // @ts-ignore
+        postSubcategory({
+          word: editValue,
+          categoryId: categoriesData.find(
+            (category) => category.name.key === selectedCategoryLocaleKey
+          )?._id
+        });
+        break;
+      case 'update':
+        putLocale({
+          _id: selectedLocaleEdit._id,
+          translation: { he: editValue, en: editValue }
+        });
+        break;
+      default:
+    }
   };
 
   const mapKeyToOption = useCallback(

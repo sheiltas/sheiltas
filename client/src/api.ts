@@ -9,7 +9,8 @@ import {
   Methods,
   Routes,
   Sheilta,
-  Api
+  Api,
+  ClientSubcategory
 } from './types';
 
 const baseURL =
@@ -87,7 +88,7 @@ function createApi<T, GetOverride = T>(
         if (!publicApi.post) {
           addToken(axiosInstance);
         }
-        return await axiosInstance.post(`/${apiName}`, body);
+        return (await axiosInstance.post(`/${apiName}`, body)).data;
       } catch (e) {
         return e;
       }
@@ -117,4 +118,13 @@ const localesApi = createApi<Locale>(Routes.LOCALES, {
 
 const categoriesApi = createApi<ClientCategory>(Routes.CATEGORIES);
 
-export { authApi, articlesApi, localesApi, categoriesApi, sheiltasApi };
+const subcategoriesApi = createApi<ClientSubcategory>(Routes.SUBCATEGORIES);
+
+export {
+  authApi,
+  articlesApi,
+  localesApi,
+  categoriesApi,
+  sheiltasApi,
+  subcategoriesApi
+};
