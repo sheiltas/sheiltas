@@ -65,8 +65,6 @@ app.listen(port, async () => {
                 await updateLocals();
             }
         }
-
-        // initSheiltas();
     } catch (e) {
         console.error('Error:', e);
     }
