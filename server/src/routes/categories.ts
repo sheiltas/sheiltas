@@ -49,7 +49,15 @@ const categoriesRoutes = createRoutes<CategoryDocument>(Routes.CATEGORIES, Categ
                 name: locale._id
             });
 
-            const response = await Promise.all([category.save(), locale.save()]);
+            const response = await Promise.all([
+                category
+                    .save()
+                    .then(
+                        async (categoryRes) =>
+                            await CategoryModel.populate(categoryRes, { path: 'name', select: 'key' })
+                    ),
+                locale.save()
+            ]);
 
             res.send(response);
         }
