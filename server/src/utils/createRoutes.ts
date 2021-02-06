@@ -86,7 +86,6 @@ const createRoutes = function <T extends Document>(
         handleSuccess<T>(res, await model.findOneAndDelete(req.body));
 
     const putFunction = async (req: Request, res: Response) => {
-        console.log('req.body', req.body);
         handleSuccess<T>(res, await model.findOneAndUpdate({ _id: req.body._id }, req.body, { new: true }));
     };
 
