@@ -102,6 +102,9 @@ const LoginPage = () => {
                       >
                         {locale.login}
                       </Button>
+                      <Button variant="contained" color="secondary">
+                        Does nothing at all
+                      </Button>
                     </Grid>
                   </Grid>
                 </Grid>
